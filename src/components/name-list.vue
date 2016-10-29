@@ -1,9 +1,12 @@
 <template lang="html">
-  <div id='name-list'>
-    <div v-for="person in people" class="name">
-      {{ person.name }}
-    </div>
-  </div>
+  <md-whiteframe md-elevation="1" id="name-list">
+    <div class="md-title names-header">Names</div>
+    <md-list>
+      <md-list-item v-for="person in people">
+        <span>{{ person.name }}</span>
+      </md-list-item>
+    </md-list>
+  </md-whiteframe>
 </template>
 
 <script>
@@ -21,11 +24,14 @@ export default {
 }
 </script>
 
-<style lang="css" scoped>
+<style lang="scss" scoped>
 #name-list {
-}
+  max-width: 20em;
+  background-color: #fff;
 
-.name {
-    /*text-align: center;*/
+  .names-header {
+    text-align: center;
+    border-bottom: 1px solid #eee;
+  }
 }
 </style>

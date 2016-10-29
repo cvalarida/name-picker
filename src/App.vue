@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" v-md-theme="'default'">
     <name-list></name-list>
     <drawing-list></drawing-list>
   </div>
@@ -31,19 +31,20 @@ html {
 }
 
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+  // font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  // -webkit-font-smoothing: antialiased;
+  // -moz-osx-font-smoothing: grayscale;
+  // text-align: center;
+  // color: #2c3e50;
 
   // margin-top: 60px;
 
   display: flex;
+  height: 100vh;
 
-  // Make the drawing list 5 times wider than the name list
+  // Make the drawing list wider than the name list
   #name-list {
-    flex: 1;
+    flex: 2;
   }
 
   #drawing-list {
