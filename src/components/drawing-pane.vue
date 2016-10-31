@@ -1,14 +1,25 @@
 <template lang="html">
-  <div id="drawing-list">
+  <div id="drawing-pane">
+
     <div v-for="drawing in history" class="drawing">
       <md-card md-with-hover class="drawing-card">
         <md-card-header>{{ drawing.date }}</md-card-header>
-        <md-card-content>
-          <span v-for="name in drawing.names">
-            {{ name }}
-          </span>
-        </md-card-content>
+
+        <md-card-expand>
+          <md-card-actions>
+            <md-button class="md-icon-button" md-expand-trigger>
+              <md-icon>keyboard_arrow_down</md-icon>
+            </md-button>
+          </md-card-actions>
+
+          <md-card-content>
+            <span v-for="name in drawing.names">
+              {{ name }}
+            </span>
+          </md-card-content>
+        </md-card-expand>
       </md-card>
+
       <div class="vertical-connector"></div>
     </div>
   </div>
@@ -16,7 +27,7 @@
 
 <script>
 export default {
-  name: 'drawing-list',
+  name: 'drawing-pane',
   data () {
     return {
       history: [
@@ -29,7 +40,7 @@ export default {
 </script>
 
 <style lang="scss">
-#drawing-list {
+#drawing-pane {
   display: flex;
   justify-content: center;
   flex-direction: column;

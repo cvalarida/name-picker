@@ -1,13 +1,13 @@
 <template>
   <div id="app" v-md-theme="'default'">
     <name-list></name-list>
-    <drawing-list></drawing-list>
+    <drawing-pane></drawing-pane>
   </div>
 </template>
 
 <script>
 import NameList from './components/name-list'
-import DrawingList from './components/drawing-list'
+import DrawingPane from './components/drawing-pane'
 
 // Probably we'll wnat to deal with the database here
 
@@ -15,7 +15,7 @@ export default {
   name: 'app',
   components: {
     NameList,
-    DrawingList
+    DrawingPane
   },
   data () {
     return {
@@ -47,7 +47,7 @@ html {
     flex: 2;
   }
 
-  #drawing-list {
+  #drawing-pane {
     flex: 5;
   }
 }
