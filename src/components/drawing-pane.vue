@@ -3,21 +3,19 @@
 
     <div v-for="drawing in history" class="drawing">
       <md-card md-with-hover class="drawing-card">
-        <md-card-header>{{ drawing.date }}</md-card-header>
+        <md-card-header>
+          <md-card-header-text>
+            <div class="md-title">{{ drawing.date.format('MMMM D, YYYY') }}</div>
+            <div class="md-subhead">{{ drawing.names.primary.join(', ') }}</div>
+          </md-card-header-text>
 
-        <md-card-expand>
-          <md-card-actions>
-            <md-button class="md-icon-button" md-expand-trigger>
-              <md-icon>keyboard_arrow_down</md-icon>
-            </md-button>
-          </md-card-actions>
+          <div>{{ drawing.date.fromNow() }}</div>
+        </md-card-header>
 
-          <md-card-content>
-            <span v-for="name in drawing.names">
-              {{ name }}
-            </span>
-          </md-card-content>
-        </md-card-expand>
+        <md-card-content>
+          <div><strong>Primary:</strong>   {{ drawing.names.primary.join(', ') }}</div>
+          <div><strong>Alternate:</strong> {{ drawing.names.alternate.join(', ') }}</div>
+        </md-card-content>
       </md-card>
 
       <div class="vertical-connector"></div>
@@ -26,13 +24,27 @@
 </template>
 
 <script>
+import moment from 'moment'
+
 export default {
   name: 'drawing-pane',
   data () {
     return {
       history: [
-        { date: new Date(), names: ['Bobo', 'Clyve', 'Aesop'] },
-        { date: new Date(), names: ['Jo', 'Bonnie', 'Nevylle'] }
+        {
+          date: moment('2016-10-21'),
+          names: {
+            primary: ['Bobo', 'Clyve', 'Aesop'],
+            alternate: ['Josephine', 'Kyle']
+          }
+        },
+        {
+          date: moment('2016-10-28'),
+          names: {
+            primary: ['Jo', 'Bonnie', 'Nevylle'],
+            alternate: ['Lester', 'Ingred']
+          }
+        }
       ]
     }
   }
@@ -50,7 +62,7 @@ export default {
 
   .drawing {
     width: 50%;
-    max-width: 35em;
+    max-width: 30em;
   }
 
   .vertical-connector {
