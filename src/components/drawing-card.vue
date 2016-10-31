@@ -10,7 +10,7 @@
     </md-card-header>
 
     <md-card-content>
-      <div><strong>Primary:</strong>   {{ drawing.names.primary.join(', ') }}</div>
+      <div><strong>Primary:</strong> {{ drawing.names.primary.join(', ') }}</div>
       <div><strong>Alternate:</strong> {{ drawing.names.alternate.join(', ') }}</div>
     </md-card-content>
   </md-card>
@@ -23,7 +23,7 @@ export default {
 </script>
 
 <style lang="scss">
-.drawing {
+.drawing-card {
   width: 50%;
   max-width: 30em;
 }
@@ -35,5 +35,4 @@ export default {
   margin-left: auto;
   margin-right: auto;
 }
-
 </style>
