@@ -22,5 +22,18 @@ export default {
 }
 </script>
 
-<style lang="css">
+<style lang="scss">
+.drawing {
+  width: 50%;
+  max-width: 30em;
+}
+
+.vertical-connector {
+  width: 1px;
+  height: 2em;
+  border-right: 1px solid #bbb;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 </style>

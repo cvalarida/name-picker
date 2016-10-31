@@ -48,20 +48,7 @@ export default {
   align-items: center;
 
   height: 100%;
-
-  .drawing {
-    width: 50%;
-    max-width: 30em;
-  }
-
-  .vertical-connector {
-    width: 1px;
-    height: 2em;
-    border-right: 1px solid #bbb;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
+  
   // Hide the last vertical connector
   div.drawing:last-of-type {
     .vertical-connector {
