@@ -2,22 +2,7 @@
   <div id="drawing-pane">
 
     <div v-for="drawing in history" class="drawing">
-      <md-card md-with-hover class="drawing-card">
-        <md-card-header>
-          <md-card-header-text>
-            <div class="md-title">{{ drawing.date.format('MMMM D, YYYY') }}</div>
-            <div class="md-subhead">{{ drawing.names.primary.join(', ') }}</div>
-          </md-card-header-text>
-
-          <div>{{ drawing.date.fromNow() }}</div>
-        </md-card-header>
-
-        <md-card-content>
-          <div><strong>Primary:</strong>   {{ drawing.names.primary.join(', ') }}</div>
-          <div><strong>Alternate:</strong> {{ drawing.names.alternate.join(', ') }}</div>
-        </md-card-content>
-      </md-card>
-
+      <drawing-card :drawing="drawing"></drawing-card>
       <div class="vertical-connector"></div>
     </div>
   </div>
@@ -25,9 +10,13 @@
 
 <script>
 import moment from 'moment'
+import DrawingCard from './drawing-card'
 
 export default {
   name: 'drawing-pane',
+  components: {
+    'drawing-card': DrawingCard
+  },
   data () {
     return {
       history: [
