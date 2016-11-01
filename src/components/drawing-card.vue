@@ -4,7 +4,6 @@
     <md-card-header>
       <md-card-header-text>
         <div class="md-title">{{ drawing.date.format('MMMM D, YYYY') }}</div>
-        <!-- <div class="md-subhead">{{ drawing.names.primary.join(', ') }}</div> -->
       </md-card-header-text>
 
       <div>{{ drawing.date.fromNow() }}</div>

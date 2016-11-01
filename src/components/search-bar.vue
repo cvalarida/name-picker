@@ -9,6 +9,7 @@
 
     <md-button id="print-button" class="md-icon-button md-raised">
       <md-icon>print</md-icon>
+      <md-tooltip md-direction="left" md-delay="400">Print Current List</md-tooltip>
     </md-button>
   </md-whiteframe>
 </template>

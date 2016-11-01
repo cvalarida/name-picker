@@ -92,8 +92,6 @@ export default {
     flex-direction: column;
     align-items: center;
 
-    // height: 100%;
-
     // Hide the last vertical connector
     &:last-of-type {
       .vertical-connector {

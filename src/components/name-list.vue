@@ -1,9 +1,5 @@
 <template lang="html">
   <md-whiteframe md-elevation="1" id="name-list">
-    <!-- <div class="names-header">
-      <div class="md-title">Names</div>
-    </div> -->
-
     <div id="new-name-form">
       <md-input-container md-inline class="new-name-input">
         <label>New Name</label>
@@ -46,16 +42,6 @@ export default {
   // Prevent the shadow of the search bar from overlapping the names list
   z-index: 30;
 
-  // .names-header {
-  //   // text-align: center;
-  //   display: flex;
-  //   align-items: center;
-  //   justify-content: center;
-  //
-  //   border-bottom: 1px solid #eee;
-  //   padding: 10px 0 10px 0;
-  // }
-
   #new-name-form {
     display: flex;
     align-items: center;
@@ -66,7 +52,6 @@ export default {
     border-bottom: 1px solid #ddd;
 
     .new-name-input {
-      // width: 95%;
       flex-grow: 1;
     }
   }
