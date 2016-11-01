@@ -18,7 +18,7 @@
 
     <!-- Add Button -->
     <md-button class="md-fab md-fab-bottom-right">
-      <md-icon>group_add</md-icon>
+      <md-icon>casino</md-icon>
       <md-tooltip md-direction="left" md-delay="400">Draw New Names</md-tooltip>
     </md-button>
   </div>
