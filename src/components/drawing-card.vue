@@ -1,9 +1,10 @@
 <template lang="html">
-  <md-card md-with-hover class="drawing-card">
+  <!-- We don't really need the ripple or hover... -->
+  <md-card md-with-hover v-md-ink-ripple class="drawing-card has-ripple">
     <md-card-header>
       <md-card-header-text>
         <div class="md-title">{{ drawing.date.format('MMMM D, YYYY') }}</div>
-        <div class="md-subhead">{{ drawing.names.primary.join(', ') }}</div>
+        <!-- <div class="md-subhead">{{ drawing.names.primary.join(', ') }}</div> -->
       </md-card-header-text>
 
       <div>{{ drawing.date.fromNow() }}</div>

@@ -1,7 +1,7 @@
 <template lang="html">
   <div id="drawing-pane">
     <!-- Search / Filter bar -->
-    <search-bar :filter="filter"></search-bar>
+    <search-bar :search="searchParam"></search-bar>
 
     <!-- List of Drawings -->
     <div id="drawing-list">
@@ -13,9 +13,13 @@
       </div>
     </div>
 
+    <div v-if="history.length === 0">
+    </div>
+
     <!-- Add Button -->
     <md-button class="md-fab md-fab-bottom-right">
-      <md-icon>add</md-icon>
+      <md-icon>group_add</md-icon>
+      <md-tooltip md-direction="left" md-delay="400">Draw New Names</md-tooltip>
     </md-button>
   </div>
 </template>
@@ -56,7 +60,7 @@ export default {
           }
         }
       ],
-      filter: {}
+      searchParam: {}
     }
   }
 }
@@ -66,10 +70,16 @@ export default {
 #drawing-pane {
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
 
   #drawing-list {
     overflow-y: scroll;
     overflow-x: hidden;
+    flex-grow: 1;
+    width: 100%;
+
+    padding-bottom: 4px;
 
     .top-spacer {
       height: 50px;
