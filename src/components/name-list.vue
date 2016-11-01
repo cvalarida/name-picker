@@ -22,13 +22,9 @@
 <script>
 export default {
   name: 'name-list',
+  props: ['people'],
   data () {
     return {
-      people: [
-        { name: 'Bobo' },
-        { name: 'Claudia' },
-        { name: 'Demosthenes' }
-      ],
       newName: ''
     }
   }

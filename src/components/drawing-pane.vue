@@ -25,7 +25,6 @@
 </template>
 
 <script>
-import moment from 'moment'
 import DrawingCard from './drawing-card'
 import SearchBar from './search-bar'
 
@@ -35,31 +34,9 @@ export default {
     'drawing-card': DrawingCard,
     'search-bar': SearchBar
   },
+  props: ['history'],
   data () {
     return {
-      history: [
-        {
-          date: moment('2016-10-21'),
-          names: {
-            primary: ['Bobo', 'Clyve', 'Aesop'],
-            alternate: ['Josephine', 'Kyle']
-          }
-        },
-        {
-          date: moment('2016-10-28'),
-          names: {
-            primary: ['Jo', 'Bonnie', 'Nevylle'],
-            alternate: ['Lester', 'Ingred']
-          }
-        },
-        {
-          date: moment('2016-11-4'),
-          names: {
-            primary: ['James', 'Karl', 'Johann'],
-            alternate: ['Aaron', 'Lyle']
-          }
-        }
-      ],
       searchParam: {}
     }
   }
