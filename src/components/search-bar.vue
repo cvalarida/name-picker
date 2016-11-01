@@ -7,7 +7,7 @@
       <md-input v-model="search.name"></md-input>
     </md-input-container>
 
-    <md-button id="print-button" class="md-icon-button md-raised">
+    <md-button id="print-button" class="md-icon-button md-raised" @click="printWindow">
       <md-icon>print</md-icon>
       <md-tooltip md-direction="left" md-delay="400">Print Current List</md-tooltip>
     </md-button>
@@ -16,7 +16,12 @@
 
 <script>
 export default {
-  props: ['search']
+  props: ['search'],
+  methods: {
+    printWindow: function () {
+      window.print()
+    }
+  }
 }
 </script>
 
