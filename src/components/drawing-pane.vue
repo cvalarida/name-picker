@@ -1,11 +1,11 @@
 <template lang="html">
   <div id="drawing-pane">
     <!-- Search / Filter bar -->
-    <search-bar :search="searchParam"></search-bar>
+    <search-bar :search="searchParam" @search="passSearch"></search-bar>
 
     <!-- List of Drawings -->
     <div id="drawing-list">
-      <div class="top-spacer"></div>
+      <div class="top-spacer"><strong>{{ history.length }}</strong> drawings</div>
 
       <div v-for="drawing in history" class="drawing">
         <drawing-card :drawing="drawing"></drawing-card>
@@ -34,10 +34,19 @@ export default {
     'drawing-card': DrawingCard,
     'search-bar': SearchBar
   },
-  props: ['history'],
+  props: {
+    history: Array
+  },
+  methods: {
+    // There's got to be a better way of passing events up multiple components
+    passSearch: function (searchString) {
+      // console.log('caught search in drawing-pane: ' + searchString)
+      this.$emit('search', searchString)
+    }
+  },
   data () {
     return {
-      searchParam: {}
+      searchParam: ''
     }
   }
 }
@@ -60,6 +69,8 @@ export default {
 
     .top-spacer {
       height: 50px;
+      text-align: right;
+      margin: 8px 8px;
     }
   }
 

@@ -2,10 +2,12 @@
   <md-whiteframe md-elevation="1" id="search-bar">
     <md-icon class='search-icon'>search</md-icon>
 
-    <md-input-container md-inline class="search-input-container">
-      <label>Search</label>
-      <md-input v-model="search.name"></md-input>
-    </md-input-container>
+    <form id="search-form" @submit.stop.prevent="search">
+      <md-input-container md-inline>
+        <label>Search</label>
+        <md-input v-model="searchString"></md-input>
+      </md-input-container>
+    </form>
 
     <md-button id="print-button" class="md-icon-button md-raised" @click="printWindow">
       <md-icon>print</md-icon>
@@ -16,10 +18,21 @@
 
 <script>
 export default {
-  props: ['search'],
+  props: {
+    searchParam: String
+  },
   methods: {
     printWindow: function () {
       window.print()
+    },
+    search: function () {
+      // console.log('searching in search-bar for ' + this.searchString)
+      this.$emit('search', this.searchString)
+    }
+  },
+  data () {
+    return {
+      searchString: this.searchParam
     }
   }
 }
@@ -41,7 +54,7 @@ export default {
     margin-right: 10px;
   }
 
-  .search-input-container {
+  #search-form {
     flex-grow: 1;
   }
 

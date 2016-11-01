@@ -1,7 +1,7 @@
 <template>
   <div id="app" v-md-theme="'default'">
     <name-pane :people="people" @addName="addPerson"></name-pane>
-    <drawing-pane :history="history"></drawing-pane>
+    <drawing-pane :history="filteredHistory" @search="search"></drawing-pane>
   </div>
 </template>
 
@@ -69,13 +69,37 @@ export default {
     addPerson: function (name) {
       // Add the name to the list...
       this.people.push({ name })
+    },
+
+    /**
+     * Searches through the history for the name given
+     *
+     * Later, it would be cool to search in only primary or alternate if
+     *  specified like: primary:Bobo the Clown
+     */
+    search: function (searchString) {
+      // This'll change pretty radically, I imagine, when we get NeDB up
+      // console.log('Searching in App for ' + searchString)
+
+      const re = new RegExp(searchString, 'i')
+
+      // Filter the history based on the search string
+      // It's perhaps not elegant, but it works.
+      this.filteredHistory = history.filter((drawing) => {
+        // just slap them all together--it's not perfect, but it should help
+        //  performance (testing needed)
+        return re.test(drawing.names.primary.join(' ') +
+          ' ' +
+          drawing.names.alternate.join(' '))
+      })
     }
   },
   data () {
     return {
       imgAlt: "I'm an image title!",
       people,
-      history
+      history,
+      filteredHistory: history
     }
   }
 }
