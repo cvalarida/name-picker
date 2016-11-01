@@ -33,7 +33,7 @@
           <label>Alternate</label>
           <md-input v-model="newDrawing.alternate" type="number"></md-input>
         </md-input-container>
-        
+
         <!-- Need Datepicker -->
         <md-input-container>
           <label>Date</label>
@@ -41,7 +41,7 @@
         </md-input-container>
 
         <div class="draw-panel-buttons">
-          <md-button class="md-raised md-primary">Draw Names</md-button>
+          <md-button class="md-raised md-primary" @click="handleAddButton">Draw Names</md-button>
           <md-button class="md-raised" @click="closeNewDrawingPane">Cancel</md-button>
         </div>
       </form>

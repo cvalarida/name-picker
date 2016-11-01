@@ -1,7 +1,11 @@
 <template>
   <div id="app" v-md-theme="'default'">
     <name-pane :people="people" @addName="addPerson"></name-pane>
-    <drawing-pane :history="filteredHistory" @search="search"></drawing-pane>
+    <drawing-pane
+      :history="filteredHistory"
+      @search="search"
+      @drawNames="drawNames"
+    ></drawing-pane>
   </div>
 </template>
 
@@ -92,6 +96,58 @@ export default {
           ' ' +
           drawing.names.alternate.join(' '))
       })
+    },
+
+    drawNames: function (newDrawingObject) {
+      console.log('drawingNames')
+      const { primary, alternate, date } = newDrawingObject
+      let chosenCount = primary + alternate
+      let drawing = {
+        date,
+        names: { primary: [], alternate: [] }
+      }
+
+      // If there aren't enough names, use them all and issue a warning...for now
+      if (chosenCount > this.people.length) {
+        console.warn(`There aren't enough names in the list of people to pick ${primary} primary and ${alternate} alternate people.`)
+        chosenCount = this.people.length
+      }
+
+      let randBetween = function getRandomInt (min, max) {
+        min = Math.ceil(min)
+        max = Math.floor(max)
+        return Math.floor(Math.random() * (max - min)) + min
+      }
+
+      // Generate primary + secondary unique numbers from 0 to people.length
+      let chosenIndexes = []
+      for (var i = 0; i < chosenCount; i++) {
+        let rIndex = randBetween(0, this.people.length)
+
+        if (chosenIndexes.includes(rIndex)) {
+          i--
+        } else {
+          chosenIndexes.push(rIndex)
+        }
+      }
+
+      console.log('chosenIndexes: ' + chosenIndexes.join(', '))
+
+      // Pull out the names
+      for (i = 0; i < chosenCount; i++) {
+        if (i < primary) {
+          console.log(`Adding primary ${chosenIndexes[i]}:`, this.people[chosenIndexes[i]].name)
+          drawing.names.primary.push(this.people[chosenIndexes[i]].name)
+        } else {
+          console.log(`Adding alternate ${chosenIndexes[i]}:`, this.people[chosenIndexes[i]].name)
+          drawing.names.alternate.push(this.people[chosenIndexes[i]].name)
+        }
+      }
+
+      // Add it to the history
+      this.history.push(drawing)
+
+      console.log('Full history: ', this.history)
     }
   },
   data () {
