@@ -1,6 +1,6 @@
 <template>
   <div id="app" v-md-theme="'default'">
-    <name-pane :people="people"></name-pane>
+    <name-pane :people="people" @addName="addPerson"></name-pane>
     <drawing-pane :history="history"></drawing-pane>
   </div>
 </template>
@@ -64,6 +64,12 @@ export default {
   components: {
     NamePane,
     DrawingPane
+  },
+  methods: {
+    addPerson: function (name) {
+      // Add the name to the list...
+      this.people.push({ name })
+    }
   },
   data () {
     return {

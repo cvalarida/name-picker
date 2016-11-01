@@ -1,15 +1,15 @@
 <template lang="html">
   <md-whiteframe md-elevation="1" id="name-pane">
-    <div id="new-name-form">
+    <form id="new-name-form" @submit.stop.prevent="addName">
       <md-input-container md-inline class="new-name-input">
         <label>New Name</label>
         <md-input v-model="newName"></input>
       </md-input-container>
-      <md-button class="md-primary md-raised">
+      <md-button class="md-primary md-raised" @click="addName">
         <md-icon>add</md-icon>
         Add
       </md-button>
-    </div>
+    </form>
 
     <div class="left-scrollbar">
       <md-list class="name-list">
@@ -24,7 +24,20 @@
 <script>
 export default {
   name: 'name-list',
-  props: ['people'],
+  props: {
+    people: Array
+  },
+  methods: {
+    // Pass the new name back to the app to add it to the list
+    addName: function () {
+      this.$emit('addName', this.newName)
+      this.newName = ''
+    },
+
+    logEvent: function (event) {
+      console.log(event)
+    }
+  },
   data () {
     return {
       newName: ''
