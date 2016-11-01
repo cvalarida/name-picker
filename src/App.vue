@@ -1,22 +1,38 @@
 <template>
   <div id="app" v-md-theme="'default'">
-    <name-list :people="people"></name-list>
+    <name-pane :people="people"></name-pane>
     <drawing-pane :history="history"></drawing-pane>
   </div>
 </template>
 
 <script>
 import moment from 'moment'
-import NameList from './components/name-list'
+import NamePane from './components/name-pane'
 import DrawingPane from './components/drawing-pane'
 
-// Probably we'll want to deal with the database here or in main.js...
+// TODO: Get the collections here
 
 // But for now...
 let people = [
   { name: 'Bobo' },
   { name: 'Claudia' },
-  { name: 'Demosthenes' }
+  { name: 'Demosthenes' },
+  { name: 'Artaxerxes' },
+  { name: 'Herald' },
+  { name: 'Clyve' },
+  { name: 'Aesop' },
+  { name: 'Josephine' },
+  { name: 'Kyle' },
+  { name: 'Jo' },
+  { name: 'Bonnie' },
+  { name: 'Nevylle' },
+  { name: 'Lester' },
+  { name: 'Ingred' },
+  { name: 'James' },
+  { name: 'Karl' },
+  { name: 'Johann' },
+  { name: 'Aaron' },
+  { name: 'Lyle' }
 ]
 
 let history = [
@@ -46,7 +62,7 @@ let history = [
 export default {
   name: 'app',
   components: {
-    NameList,
+    NamePane,
     DrawingPane
   },
   data () {
@@ -69,7 +85,7 @@ html {
   height: 100vh;
 
   // Make the drawing list wider than the name list
-  #name-list {
+  #name-pane {
     flex: 2;
   }
 

@@ -1,5 +1,5 @@
 <template lang="html">
-  <md-whiteframe md-elevation="1" id="name-list">
+  <md-whiteframe md-elevation="1" id="name-pane">
     <div id="new-name-form">
       <md-input-container md-inline class="new-name-input">
         <label>New Name</label>
@@ -11,11 +11,13 @@
       </md-button>
     </div>
 
-    <md-list>
-      <md-list-item v-for="person in people">
-        <span>{{ person.name }}</span>
-      </md-list-item>
-    </md-list>
+    <div class="left-scrollbar">
+      <md-list class="name-list">
+        <md-list-item v-for="person in people">
+          <span>{{ person.name }}</span>
+        </md-list-item>
+      </md-list>
+    </div>
   </md-whiteframe>
 </template>
 
@@ -31,14 +33,19 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-#name-list {
+<style lang="scss">
+#name-pane {
+  display: flex;
+  flex-direction: column;
+
   max-width: 20em;
   background-color: #fff;
   // Prevent the shadow of the search bar from overlapping the names list
   z-index: 30;
 
   #new-name-form {
+    flex-shrink: 0;
+
     display: flex;
     align-items: center;
     justify-content: center;
@@ -50,6 +57,14 @@ export default {
     .new-name-input {
       flex-grow: 1;
     }
+  }
+
+  .left-scrollbar {
+    overflow-y: auto;
+    direction: rtl;
+  }
+  .name-list {
+    direction: ltr;
   }
 }
 </style>

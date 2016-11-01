@@ -51,7 +51,7 @@ export default {
   align-items: center;
 
   #drawing-list {
-    overflow-y: scroll;
+    overflow-y: auto;
     overflow-x: hidden;
     flex-grow: 1;
     width: 100%;

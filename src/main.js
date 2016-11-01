@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import App from './App'
 
+// TODO: Load database
+
 // I'd much rather only download the few I'll use rather than the 90MB+ node
 //  module, but I can't figure out how to do that yet...So dumb.
 import 'material-design-icons/iconfont/material-icons.css'
