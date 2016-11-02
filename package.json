@@ -17,6 +17,7 @@
     "moment": "^2.15.2",
     "roboto-fontface": "^0.6.0",
     "vue": "^2.0.1",
+    "vue-flatpickr": "^2.0.3",
     "vue-material": "^0.2.0"
   },
   "devDependencies": {

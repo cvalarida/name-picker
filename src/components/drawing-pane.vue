@@ -34,10 +34,15 @@
           <md-input v-model="newDrawing.alternate" type="number"></md-input>
         </md-input-container>
 
-        <!-- Need Datepicker -->
         <md-input-container>
-          <label>Date</label>
-          <md-input v-model="newDrawing.date"></md-input>
+          <!-- HACK ...but it works...just looks funny -->
+          <!-- I don't like it, but I can't spend any more time on it -->
+          <!-- It also leaves this stupid little line and I don't know why -->
+          <label>{{ newDrawingFormattedDate || 'Date' }}</label>
+          <flatpickr
+            :options="{ dateFormat: 'F j, Y' }"
+            @update="updateDrawingDate"
+          >
         </md-input-container>
 
         <div class="draw-panel-buttons">
@@ -51,6 +56,7 @@
 
 <script>
 import moment from 'moment'
+import Flatpickr from 'vue-flatpickr/vue-flatpickr-material_red'
 
 import DrawingCard from './drawing-card'
 import SearchBar from './search-bar'
@@ -59,7 +65,8 @@ export default {
   name: 'drawing-pane',
   components: {
     'drawing-card': DrawingCard,
-    'search-bar': SearchBar
+    'search-bar': SearchBar,
+    'flatpickr': Flatpickr
   },
   props: {
     history: Array
@@ -80,10 +87,24 @@ export default {
     },
 
     handleAddButton: function () {
+      // TODO: Check to make sure we have valid data
+      //  (a date, primary >= 1, alternate > 0)
+
       if (this.newDrawingPanelOpen) {
         this.$emit('drawNames', this.newDrawing)
       }
       this.newDrawingPanelOpen = false
+    },
+
+    updateDrawingDate: function (newDate) {
+      console.log('newDate: ', newDate)
+      this.newDrawing.date = moment(newDate, 'MMMM D, YYYY')
+      console.log('updating date to', this.newDrawing.date.format('MMMM D, YYYY'))
+
+      // Because I couldn't just display newDrawing.date.format() in the
+      //  template because when it was '', .format() didn't exist and I don't
+      //  want to default to moment() because we can't edit the date if
+      this.newDrawingFormattedDate = newDate
     }
   },
   data () {
@@ -93,8 +114,13 @@ export default {
       newDrawing: {
         primary: 3,
         alternate: 2,
-        date: moment()
-      }
+        // Since we can't update the drawings once drawn,  the date the drawing
+        //  is for needs to be deliberately chosen. We'll default to today in
+        //  the datepicker, though.
+        // date: moment()
+        date: ''
+      },
+      newDrawingFormattedDate: ''
     }
   }
 }
@@ -146,6 +172,12 @@ export default {
       .draw-panel-buttons {
         margin-top: auto;
         margin-bottom: auto;
+      }
+
+      .md-input-container {
+        max-width: 200px;
+        flex-shrink: 1;
+        flex-grow: 1;
       }
     }
   }
