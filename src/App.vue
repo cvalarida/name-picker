@@ -36,6 +36,20 @@ let sortByName = function (list, asc = true) {
   })
 }
 
+// Shouldn't really be needed once we get NeDB up and running...
+// Assumes all dates are instances of moment
+let sortByDate = function (list, asc = true) {
+  return list.sort((a, b) => {
+    if (a.date.isBefore(b.date)) {
+      return asc ? -1 : 1
+    } else if (b.date.isBefore(a.date)) {
+      return asc ? 1 : -1
+    } else {
+      return 0
+    }
+  })
+}
+
 // But for now...
 let people = [
   { name: 'Bobo' },
@@ -172,7 +186,9 @@ export default {
       }
 
       // Add it to the history
+      // Ideally, we wouldn't do it like this, but for now...
       this.history.push(drawing)
+      this.history = sortByDate(this.history)
 
       console.log('Full history: ', this.history)
     }
@@ -181,7 +197,7 @@ export default {
     return {
       imgAlt: "I'm an image title!",
       people: sortByName(people),
-      history,
+      history: sortByDate(history),
       filteredHistory: history,
       searchString: ''
     }
