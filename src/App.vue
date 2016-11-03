@@ -140,7 +140,6 @@ export default {
     },
 
     drawNames: function (newDrawingObject) {
-      console.log('drawingNames')
       const { primary, alternate, date } = newDrawingObject
       let chosenCount = primary + alternate
       let drawing = {
@@ -172,15 +171,11 @@ export default {
         }
       }
 
-      console.log('chosenIndexes: ' + chosenIndexes.join(', '))
-
       // Pull out the names
       for (i = 0; i < chosenCount; i++) {
         if (i < primary) {
-          console.log(`Adding primary ${chosenIndexes[i]}:`, this.people[chosenIndexes[i]].name)
           drawing.names.primary.push(this.people[chosenIndexes[i]].name)
         } else {
-          console.log(`Adding alternate ${chosenIndexes[i]}:`, this.people[chosenIndexes[i]].name)
           drawing.names.alternate.push(this.people[chosenIndexes[i]].name)
         }
       }
@@ -189,8 +184,6 @@ export default {
       // Ideally, we wouldn't do it like this, but for now...
       this.history.push(drawing)
       this.history = sortByDate(this.history)
-
-      console.log('Full history: ', this.history)
     }
   },
   data () {

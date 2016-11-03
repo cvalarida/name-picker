@@ -95,7 +95,6 @@ export default {
 
     handleAddButton: function () {
       let errors = false
-      console.log(document.getElementById('drawing-date-input-error'))
       if (this.newDrawing.date === '') {
         errors = true
         document.getElementById('drawing-date-input').classList.add('md-input-invalid')
