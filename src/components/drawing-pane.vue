@@ -1,7 +1,7 @@
 <template lang="html">
   <div id="drawing-pane">
     <!-- Search / Filter bar -->
-    <search-bar :search="searchString" @search="passSearch"></search-bar>
+    <search-bar :searchParam="searchString" @search="passSearch"></search-bar>
 
     <!-- List of Drawings -->
     <div id="drawing-list">

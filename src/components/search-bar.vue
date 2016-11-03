@@ -3,7 +3,7 @@
     <md-icon class='search-icon'>search</md-icon>
 
     <form id="search-form" @submit.stop.prevent="search">
-      <md-input-container md-inline>
+      <md-input-container md-inline  id='search-input'>
         <label>Search</label>
         <md-input v-model="searchString"></md-input>
       </md-input-container>
@@ -33,6 +33,20 @@ export default {
   data () {
     return {
       searchString: this.searchParam
+    }
+  },
+  watch: {
+    // Probably there's a better way to do this, but using searchParam directly
+    //  issues a warning to not modify props, and when I don't watch it and
+    //  update searchString, when the searchParam prop changes, searchString
+    //  doesn't. This is presumably because data() is only called upon creation
+    //  of the element, which makes enough sense. Still, it's a pain for me. >_>
+    searchParam: function (val) {
+      this.searchString = val
+      // Update the input so it actually looks like it has a value (if necessary)
+      if (val !== '') {
+        document.getElementById('search-input').classList.add('md-has-value')
+      }
     }
   }
 }
