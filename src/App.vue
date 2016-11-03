@@ -1,8 +1,13 @@
 <template>
   <div id="app" v-md-theme="'default'">
-    <name-pane :people="people" @addName="addPerson"></name-pane>
+    <name-pane
+      :people="people"
+      @addName="addPerson"
+      @search="search"
+    ></name-pane>
     <drawing-pane
       :history="filteredHistory"
+      :searchString="searchString"
       @search="search"
       @drawNames="drawNames"
     ></drawing-pane>
@@ -85,6 +90,9 @@ export default {
       // This'll change pretty radically, I imagine, when we get NeDB up
       // console.log('Searching in App for ' + searchString)
 
+      // Make sure the search bar is up to date
+      this.searchString = searchString
+
       const re = new RegExp(searchString, 'i')
 
       // Filter the history based on the search string
@@ -155,7 +163,8 @@ export default {
       imgAlt: "I'm an image title!",
       people,
       history,
-      filteredHistory: history
+      filteredHistory: history,
+      searchString: ''
     }
   }
 }

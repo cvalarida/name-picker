@@ -6,7 +6,7 @@
         <div class="md-title">{{ drawing.date.format('MMMM D, YYYY') }}</div>
       </md-card-header-text>
 
-      <div>{{ drawing.date.fromNow() }}</div>
+      <div class="time-ago">{{ drawing.date.fromNow() }}</div>
     </md-card-header>
 
     <md-card-content>
@@ -34,5 +34,18 @@ export default {
   border-right: 1px solid #bbb;
   margin-left: auto;
   margin-right: auto;
+}
+
+@media print {
+  .vertical-connector { display: none }
+
+  .drawing-card {
+    width: 22em;
+    position: relative;
+    page-break-inside: avoid;
+    &.md-card { box-shadow: none }
+
+    .md-card-header .time-ago { display: none }
+  }
 }
 </style>

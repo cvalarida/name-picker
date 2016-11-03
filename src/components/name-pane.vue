@@ -13,7 +13,7 @@
 
     <div class="left-scrollbar">
       <md-list class="name-list">
-        <md-list-item v-for="person in people">
+        <md-list-item v-for="person in people" @click="searchFor(person.name)">
           <span>{{ person.name }}</span>
         </md-list-item>
       </md-list>
@@ -36,6 +36,10 @@ export default {
 
     logEvent: function (event) {
       console.log(event)
+    },
+
+    searchFor: function (name) {
+      this.$emit('search', name)
     }
   },
   data () {
@@ -79,5 +83,9 @@ export default {
   .name-list {
     direction: ltr;
   }
+}
+
+@media print {
+  #name-pane { display: none }
 }
 </style>

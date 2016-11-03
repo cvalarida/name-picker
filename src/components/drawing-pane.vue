@@ -1,7 +1,7 @@
 <template lang="html">
   <div id="drawing-pane">
     <!-- Search / Filter bar -->
-    <search-bar :search="searchParam" @search="passSearch"></search-bar>
+    <search-bar :search="searchString" @search="passSearch"></search-bar>
 
     <!-- List of Drawings -->
     <div id="drawing-list">
@@ -69,7 +69,8 @@ export default {
     'flatpickr': Flatpickr
   },
   props: {
-    history: Array
+    history: Array,
+    searchString: String
   },
   methods: {
     // There's got to be a better way of passing events up multiple components
@@ -109,7 +110,6 @@ export default {
   },
   data () {
     return {
-      searchParam: '',
       newDrawingPanelOpen: false,
       newDrawing: {
         primary: 3,
@@ -180,6 +180,28 @@ export default {
         flex-grow: 1;
       }
     }
+  }
+}
+
+@media print {
+  .new-drawing-panel { display: none }
+  .md-fab.md-fab-bottom-right { display: none }
+
+  #drawing-pane #drawing-list {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-around;
+    flex-wrap: wrap;
+
+    overflow: visible;
+
+    .top-spacer {
+      width: 100%;
+      flex-shrink: 0;
+    }
+
+    .drawing { position: relative }
   }
 }
 </style>

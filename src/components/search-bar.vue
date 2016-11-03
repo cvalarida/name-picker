@@ -65,4 +65,8 @@ export default {
     margin-left: 20px;
   }
 }
+
+@media print {
+  #search-bar { display: none }
+}
 </style>
