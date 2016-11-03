@@ -46,6 +46,8 @@ export default {
       // Update the input so it actually looks like it has a value (if necessary)
       if (val !== '') {
         document.getElementById('search-input').classList.add('md-has-value')
+      } else {
+        document.getElementById('search-input').classList.remove('md-has-value')
       }
     }
   }
