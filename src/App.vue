@@ -21,6 +21,21 @@ import DrawingPane from './components/drawing-pane'
 
 // TODO: Get the collections here
 
+let sortByName = function (list, asc = true) {
+  return list.sort((a, b) => {
+    var nameA = a.name.toLowerCase()
+    var nameB = b.name.toLowerCase()
+
+    if (nameA < nameB) {
+      return asc ? -1 : 1
+    } else if (nameA > nameB) {
+      return asc ? 1 : -1
+    } else {
+      return 0
+    }
+  })
+}
+
 // But for now...
 let people = [
   { name: 'Bobo' },
@@ -77,7 +92,11 @@ export default {
   methods: {
     addPerson: function (name) {
       // Add the name to the list...
+      // Ideally, we'd add the name to the right position to start with, but
+      //  that's more hassle than I want to deal with for only like 100 records
+      //  that'll already be sorted by the time we get here, so...
       this.people.push({ name })
+      this.people = sortByName(this.people)
     },
 
     /**
@@ -161,7 +180,7 @@ export default {
   data () {
     return {
       imgAlt: "I'm an image title!",
-      people,
+      people: sortByName(people),
       history,
       filteredHistory: history,
       searchString: ''
