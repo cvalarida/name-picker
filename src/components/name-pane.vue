@@ -1,23 +1,31 @@
 <template lang="html">
   <md-whiteframe md-elevation="1" id="name-pane">
-    <form id="new-name-form" @submit.stop.prevent="addName">
-      <md-input-container md-inline class="new-name-input">
-        <label>New Name</label>
-        <md-input v-model="newName"></input>
-      </md-input-container>
-      <md-button class="md-primary md-raised" @click="addName">
-        <md-icon>add</md-icon>
-        Add
-      </md-button>
-    </form>
+    <!-- <div class='tabs-spacer'></div> -->
 
-    <div class="left-scrollbar">
-      <md-list class="name-list">
-        <md-list-item v-for="person in people" @click="searchFor(person.name)">
-          <span>{{ person.name }}</span>
-        </md-list-item>
-      </md-list>
-    </div>
+    <md-tabs md-fixed>
+      <md-tab md-label="List" md-icon="list">
+        <div class="left-scroll-bar">
+          <md-list class="name-list">
+            <md-list-item v-for="person in people" @click="searchFor(person.name)">
+              <span>{{ person.name }}</span>
+            </md-list-item>
+          </md-list>
+        </div>
+      </md-tab>
+
+      <md-tab md-label="Add" md-icon="add">
+        <form id="new-name-form" @submit.stop.prevent="addName">
+          <md-input-container md-inline class="new-name-input">
+            <label>New Name</label>
+            <md-input v-model="newName"></input>
+          </md-input-container>
+          <md-button class="md-primary md-raised" @click="addName">
+            <md-icon>add</md-icon>
+            Add
+          </md-button>
+        </form>
+      </md-tab>
+    </md-tabs>
   </md-whiteframe>
 </template>
 
@@ -76,8 +84,19 @@ export default {
     }
   }
 
-  .left-scrollbar {
+  .tabs-spacer {
+    height: 28px;
+    // Purple, the primary color
+    // Preferably, we'd be able to get the color from the theme, but...
+    background-color: #9c27b0;
+    flex-shrink: 0;
+  }
+
+  .md-tabs-content {
     overflow-y: auto;
+    // direction: rtl;
+  }
+  .left-scroll-bar {
     direction: rtl;
   }
   .name-list {

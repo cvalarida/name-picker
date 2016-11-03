@@ -65,6 +65,8 @@ export default {
   z-index: 10;
 
   padding: 0px 10px 0px 10px;
+  // Line it up with the tabs on its left
+  margin-top: -5px;
 
   .search-icon {
     margin-right: 10px;
