@@ -1,7 +1,5 @@
 <template lang="html">
   <md-whiteframe md-elevation="1" id="name-pane">
-    <!-- <div class='tabs-spacer'></div> -->
-
     <md-tabs md-fixed>
       <md-tab md-label="List" md-icon="list">
         <div class="left-scroll-bar">
@@ -82,14 +80,6 @@ export default {
     .new-name-input {
       flex-grow: 1;
     }
-  }
-
-  .tabs-spacer {
-    height: 28px;
-    // Purple, the primary color
-    // Preferably, we'd be able to get the color from the theme, but...
-    background-color: #9c27b0;
-    flex-shrink: 0;
   }
 
   .md-tabs-content {

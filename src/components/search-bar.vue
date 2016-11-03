@@ -9,6 +9,10 @@
       </md-input-container>
     </form>
 
+    <md-button id="clear-button" class="md-icon-button" @click="clear">
+      <md-icon>clear</md-icon>
+    </md-button>
+
     <md-button id="print-button" class="md-icon-button md-raised" @click="printWindow">
       <md-icon>print</md-icon>
       <md-tooltip md-direction="left" md-delay="400">Print Current List</md-tooltip>
@@ -28,6 +32,13 @@ export default {
     search: function () {
       // console.log('searching in search-bar for ' + this.searchString)
       this.$emit('search', this.searchString)
+    },
+    clear: function () {
+      this.searchString = ''
+      // Because md-input still thinks it has a value...
+      document.getElementById('search-input').classList.remove('md-has-value')
+      // Doesn't automatically search
+      this.search(this.searchString)
     }
   },
   data () {
@@ -76,11 +87,15 @@ export default {
     flex-grow: 1;
   }
 
-  #print-button {
+  .md-button {
     margin-top: auto;
     margin-bottom: auto;
     margin-right: 10px;
     margin-left: 20px;
+  }
+
+  #clear-button {
+    margin-left: 0px;
   }
 }
 

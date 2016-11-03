@@ -5,7 +5,9 @@
 
     <!-- List of Drawings -->
     <div id="drawing-list">
-      <div class="top-spacer"><strong>{{ history.length }}</strong> drawings</div>
+      <div class="top-spacer">
+        <strong>{{ history.length }}</strong> drawings {{ searchString !== '' ? 'for ' + searchString : '' }}
+      </div>
 
       <div v-for="drawing in history" class="drawing">
         <drawing-card :drawing="drawing"></drawing-card>
