@@ -23,22 +23,26 @@
     </md-button>
 
     <!-- New Drawing Panel -->
+    <!-- Really could have pulled this out into its own component -->
     <md-whiteframe class="new-drawing-panel" md-elevation="1" v-if="newDrawingPanelOpen">
       <form id="new-drawing-form" @submit.stop.prevent="handleAddButton">
-        <md-input-container>
+        <md-input-container id="primary-input">
           <label>Primary</label>
-          <md-input v-model="newDrawing.primary" type="number"></md-input>
+          <md-input v-model="newDrawing.primary" type="number" min="1"></md-input>
+          <span class="md-error" id="primary-input-error"></span>
         </md-input-container>
-        <md-input-container>
+        <md-input-container id="alternate-input">
           <label>Alternate</label>
-          <md-input v-model="newDrawing.alternate" type="number"></md-input>
+          <md-input v-model="newDrawing.alternate" type="number" min="0"></md-input>
+          <span class="md-error" id="alternate-input-error"></span>
         </md-input-container>
 
-        <md-input-container>
+        <md-input-container id="drawing-date-input">
           <!-- HACK ...but it works...just looks funny -->
           <!-- I don't like it, but I can't spend any more time on it -->
           <!-- It also leaves this stupid little line and I don't know why -->
           <label>{{ newDrawingFormattedDate || 'Date' }}</label>
+          <span class="md-error" id="drawing-date-input-error"></span>
           <flatpickr
             :options="{ dateFormat: 'F j, Y' }"
             @update="updateDrawingDate"
@@ -88,24 +92,45 @@ export default {
     },
 
     handleAddButton: function () {
-      // TODO: Check to make sure we have valid data
-      //  (a date, primary >= 1, alternate > 0)
-
-      if (this.newDrawingPanelOpen) {
-        this.$emit('drawNames', this.newDrawing)
+      let errors = false
+      console.log(document.getElementById('drawing-date-input-error'))
+      if (this.newDrawing.date === '') {
+        errors = true
+        document.getElementById('drawing-date-input').classList.add('md-input-invalid')
       }
-      this.newDrawingPanelOpen = false
+      if (this.newDrawing.primary < 1) {
+        errors = true
+        document.getElementById('primary-input').classList.add('md-input-invalid')
+        document.getElementById('primary-input-error').innerHTML = 'Must be greater than 1'
+      }
+      if (this.newDrawing.alternate < 0) {
+        errors = true
+        document.getElementById('alternate-input').classList.add('md-input-invalid')
+        document.getElementById('alternate-input-error').innerHTML = 'Cannot be negative'
+      }
+
+      if (!errors) {
+        this.$emit('drawNames', this.newDrawing)
+        this.newDrawingPanelOpen = false
+
+        // Reset errors...
+        document.getElementById('drawing-date-input').classList.remove('md-input-invalid')
+        document.getElementById('primary-input').classList.remove('md-input-invalid')
+        document.getElementById('alternate-input').classList.remove('md-input-invalid')
+        document.getElementById('alternate-input-error').innerHTML = ''
+        document.getElementById('primary-input-error').innerHTML = ''
+      }
     },
 
     updateDrawingDate: function (newDate) {
-      console.log('newDate: ', newDate)
       this.newDrawing.date = moment(newDate, 'MMMM D, YYYY')
-      console.log('updating date to', this.newDrawing.date.format('MMMM D, YYYY'))
 
       // Because I couldn't just display newDrawing.date.format() in the
       //  template because when it was '', .format() didn't exist and I don't
       //  want to default to moment() because we can't edit the date if
       this.newDrawingFormattedDate = newDate
+      // Now that a date has been selected, make sure it looks valid
+      document.getElementById('drawing-date-input').classList.remove('md-input-invalid')
     }
   },
   data () {
