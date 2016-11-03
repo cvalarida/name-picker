@@ -118,19 +118,33 @@ export default {
      *
      * Later, it would be cool to search in only primary or alternate if
      *  specified like: primary:Bobo the Clown
+     *
+     * This'll change pretty radically, I imagine, when we get NeDB up
+     *
+     * @param Object searchObject  {
+     *     searchString: String,
+     *     startDate: Moment instance,
+     *     endDate: Moment instance
+     *   }
      */
-    search: function (searchString) {
-      // This'll change pretty radically, I imagine, when we get NeDB up
-      // console.log('Searching in App for ' + searchString)
+    search: function (searchObject) {
+      const { searchString, startDate, endDate } = searchObject
+      console.log(`Searching for ${searchString} between`, startDate, ' and ', endDate)
+      // Filter the history based on the search string
+      // It's perhaps not elegant, but it works.
 
       // Make sure the search bar is up to date
       this.searchString = searchString
 
       const re = new RegExp(searchString, 'i')
 
-      // Filter the history based on the search string
-      // It's perhaps not elegant, but it works.
       this.filteredHistory = history.filter((drawing) => {
+        // Ensure the dates are right
+        if ((startDate && drawing.date.isBefore(startDate)) ||
+          (endDate && drawing.date.isAfter(endDate))) {
+          return false
+        }
+
         // just slap them all together--it's not perfect, but it should help
         //  performance (testing needed)
         return re.test(drawing.names.primary.join(' ') +
@@ -192,7 +206,7 @@ export default {
       people: sortByName(people),
       history: sortByDate(history),
       filteredHistory: history,
-      searchString: ''
+      searchString: null
     }
   }
 }

@@ -45,7 +45,7 @@ export default {
     },
 
     searchFor: function (name) {
-      this.$emit('search', name)
+      this.$emit('search', { searchString: name })
     }
   },
   data () {

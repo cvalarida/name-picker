@@ -9,6 +9,25 @@
       </md-input-container>
     </form>
 
+    <form class="date-ranges">
+      <span>From</span>
+      <md-input-container id="start-date-input">
+        <label>{{ startDateFormatted || 'Start Date' }}</label>
+        <flatpickr
+          :options="{ dateFormat: 'F j, Y' }"
+          @update="updateStartDate"
+        >
+      </md-input-container>
+      <span> to </span>
+      <md-input-container id="end-date-input">
+        <label>{{ endDateFormatted || 'End Date' }}</label>
+        <flatpickr
+          :options="{ dateFormat: 'F j, Y' }"
+          @update="updateEndDate"
+        >
+      </md-input-container>
+    </form>
+
     <md-button id="clear-button" class="md-icon-button" @click="clear">
       <md-icon>clear</md-icon>
     </md-button>
@@ -21,7 +40,13 @@
 </template>
 
 <script>
+import moment from 'moment'
+import Flatpickr from 'vue-flatpickr/vue-flatpickr-material_red'
+
 export default {
+  components: {
+    'flatpickr': Flatpickr
+  },
   props: {
     searchParam: String
   },
@@ -31,19 +56,39 @@ export default {
     },
     search: function () {
       // console.log('searching in search-bar for ' + this.searchString)
-      this.$emit('search', this.searchString)
+      const { searchString, startDate, endDate } = this
+      this.$emit('search', { searchString, startDate, endDate })
     },
     clear: function () {
       this.searchString = ''
+      this.startDate = null
+      this.endDate = null
+      this.startDateFormatted = ''
+      this.endDateFormatted = ''
+
       // Because md-input still thinks it has a value...
       document.getElementById('search-input').classList.remove('md-has-value')
       // Doesn't automatically search
-      this.search(this.searchString)
+      this.search()
+    },
+    updateStartDate: function (newDate) {
+      this.startDate = moment(newDate, 'MMMM D, YYYY')
+      this.startDateFormatted = newDate
+      this.search()
+    },
+    updateEndDate: function (newDate) {
+      this.endDate = moment(newDate, 'MMMM D, YYYY')
+      this.endDateFormatted = newDate
+      this.search()
     }
   },
   data () {
     return {
-      searchString: this.searchParam
+      searchString: this.searchParam,
+      startDate: null,
+      endDate: null,
+      startDateFormatted: '',
+      endDateFormatted: ''
     }
   },
   watch: {
@@ -85,6 +130,21 @@ export default {
 
   #search-form {
     flex-grow: 1;
+    margin-right: 20px;
+  }
+
+  .date-ranges {
+    display: flex;
+    flex-grow: 1;
+    align-items: center;
+    justify-content: flex-end;
+
+    .md-input-container {
+      // width: 200px;
+      flex-basis: 200px;
+      margin-left: 10px;
+      margin-right: 10px;
+    }
   }
 
   .md-button {
