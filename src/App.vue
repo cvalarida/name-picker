@@ -2,7 +2,7 @@
   <div id="app" v-md-theme="'default'">
     <name-pane
       :people="people"
-      @addName="addPerson"
+      @addNames="addNames"
       @search="search"
     ></name-pane>
     <drawing-pane
@@ -104,12 +104,21 @@ export default {
     DrawingPane
   },
   methods: {
-    addPerson: function (name) {
-      // Add the name to the list...
-      // Ideally, we'd add the name to the right position to start with, but
+    addNames: function (names) {
+      // Add the names to the list...
+      // Ideally, we'd add the names to the right position to start with, but
       //  that's more hassle than I want to deal with for only like 100 records
       //  that'll already be sorted by the time we get here, so...
-      this.people.push({ name })
+
+      // Turn it into an array of names separated by newlines
+      names = names.split(/\r?\n/)
+      // console.log(names)
+
+      for (var name of names) {
+        if (name !== '') {
+          this.people.push({ name })
+        }
+      }
       this.people = sortByName(this.people)
     },
 

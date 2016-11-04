@@ -1,6 +1,7 @@
 <template lang="html">
   <md-whiteframe md-elevation="1" id="name-pane">
     <md-tabs md-fixed>
+      <!-- List Tab -->
       <md-tab md-label="List" md-icon="list">
         <div class="left-scroll-bar">
           <md-list class="name-list">
@@ -11,17 +12,16 @@
         </div>
       </md-tab>
 
+      <!-- Add Names Tab -->
       <md-tab md-label="Add" md-icon="add">
-        <form id="new-name-form" @submit.stop.prevent="addName">
-          <md-input-container md-inline class="new-name-input">
-            <label>New Name</label>
-            <md-input v-model="newName"></input>
-          </md-input-container>
-          <md-button class="md-primary md-raised" @click="addName">
-            <md-icon>add</md-icon>
-            Add
-          </md-button>
-        </form>
+        <md-input-container md-inline class="new-name-input">
+          <label>New Names</label>
+          <md-textarea v-model="newNames"></textarea>
+        </md-input-container>
+        <md-button class="md-primary md-raised" @click="addNames">
+          <md-icon>add</md-icon>
+          Add
+        </md-button>
       </md-tab>
     </md-tabs>
   </md-whiteframe>
@@ -35,9 +35,9 @@ export default {
   },
   methods: {
     // Pass the new name back to the app to add it to the list
-    addName: function () {
-      this.$emit('addName', this.newName)
-      this.newName = ''
+    addNames: function () {
+      this.$emit('addNames', this.newNames)
+      this.newNames = ''
     },
 
     logEvent: function (event) {
@@ -50,7 +50,7 @@ export default {
   },
   data () {
     return {
-      newName: ''
+      newNames: ''
     }
   }
 }
@@ -66,24 +66,15 @@ export default {
   // Prevent the shadow of the search bar from overlapping the names list
   z-index: 30;
 
-  #new-name-form {
-    flex-shrink: 0;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    // padding: 0 10px 0 10px;
-    padding-left: 10px;
-    border-bottom: 1px solid #ddd;
-
-    .new-name-input {
-      flex-grow: 1;
-    }
+  // I hate that I have use !important, but...apart from setting a specific
+  //  height on the #new-name-form, it's all I can do to make the tab only
+  //  scroll when necessary, rather than when it gets passed its inlined style.
+  .md-tabs {
+    height: 100%;
   }
-
   .md-tabs-content {
     overflow-y: auto;
+    height: 100% !important;
     // direction: rtl;
   }
   .left-scroll-bar {
