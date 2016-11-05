@@ -3,6 +3,7 @@
     <name-pane
       :people="people"
       @addNames="addNames"
+      @removeName="removeName"
       @search="search"
     ></name-pane>
     <drawing-pane
@@ -113,13 +114,18 @@ export default {
       // Turn it into an array of names separated by newlines
       names = names.split(/\r?\n/)
       // console.log(names)
-
       for (var name of names) {
         if (name !== '') {
           this.people.push({ name })
         }
       }
       this.people = sortByName(this.people)
+    },
+
+    // This'll change when we get NeDB up
+    // May change to use the name instead of the index...unless we give them IDs
+    removeName: function (index) {
+      this.people.splice(index, 1)
     },
 
     /**

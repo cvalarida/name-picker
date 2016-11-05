@@ -5,8 +5,11 @@
       <md-tab md-label="List" md-icon="list">
         <div class="left-scroll-bar">
           <md-list class="name-list">
-            <md-list-item v-for="person in people" @click="searchFor(person.name)">
-              <span>{{ person.name }}</span>
+            <md-list-item v-for="(person, index) in people" class="name">
+              <span @click="searchFor(person.name)">{{ person.name }}</span>
+              <md-button class="md-icon-button delete-person-button" @click="openDeleteConfirm(person, index)">
+                <md-icon>delete</md-icon>
+              </md-button>
             </md-list-item>
           </md-list>
         </div>
@@ -24,12 +27,27 @@
         </md-button>
       </md-tab>
     </md-tabs>
+
+    <!-- Delete Confirmation Modal -->
+    <modal v-if="deleteConfirmOpen">
+      <h3 slot="header">Confirm Delete</h3>
+      <span slot="body">Are you sure you want to remove {{ deleting.name }} from the list?</span>
+      <div slot="footer">
+        <md-button @click="deleteConfirmOpen = false">Cancel</md-button>
+        <md-button class="md-warn" @click="deleteName(deleting.index)">Delete</md-button>
+      </div>
+    </modal>
   </md-whiteframe>
 </template>
 
 <script>
+import modal from './modal'
+
 export default {
   name: 'name-list',
+  components: {
+    modal
+  },
   props: {
     people: Array
   },
@@ -38,6 +56,20 @@ export default {
     addNames: function () {
       this.$emit('addNames', this.newNames)
       this.newNames = ''
+    },
+
+    openDeleteConfirm: function (person, index) {
+      // Show the name of whom we're deleting
+      person.index = index
+      this.deleting = person
+
+      this.deleteConfirmOpen = true
+    },
+
+    // May change this to name later
+    deleteName: function (index) {
+      this.$emit('removeName', index)
+      this.deleteConfirmOpen = false
     },
 
     logEvent: function (event) {
@@ -50,7 +82,9 @@ export default {
   },
   data () {
     return {
-      newNames: ''
+      newNames: '',
+      deleteConfirmOpen: false,
+      deleting: {}
     }
   }
 }
@@ -77,11 +111,44 @@ export default {
     height: 100% !important;
     // direction: rtl;
   }
+
+  .md-list-item .md-list-item-holder {
+    // Space out the delete button
+    justify-content: space-between;
+
+    span {
+      flex-grow: 1;
+    }
+
+    // Color the trash can gray when hovered over the name
+    // Not working, not sure why, not going to mess with it right now.
+    .name:hover .delete-person-button .md-icon {
+      color: rgba(0,0,0,.54);
+    }
+
+    .delete-person-button {
+      .md-icon {
+        // Color the trash can white normally to hide it
+        color: #fff;
+        &:hover {
+          // And red when hovered over the icon
+          color: #f44336;
+        }
+      }
+    }
+  }
+
   .left-scroll-bar {
     direction: rtl;
   }
   .name-list {
     direction: ltr;
+  }
+
+  .modal-footer div {
+    display: flex;
+    align-content: center;
+    justify-content: center;
   }
 }
 

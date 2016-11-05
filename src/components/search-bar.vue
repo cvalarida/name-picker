@@ -63,6 +63,8 @@ export default {
       this.searchString = ''
       this.startDate = null
       this.endDate = null
+
+      // Switch this to use computed properties
       this.startDateFormatted = ''
       this.endDateFormatted = ''
 
