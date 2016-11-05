@@ -31,7 +31,7 @@
     <!-- Delete Confirmation Modal -->
     <modal v-if="deleteConfirmOpen">
       <h3 slot="header">Confirm Delete</h3>
-      <span slot="body">Are you sure you want to remove {{ deleting.name }} from the list?</span>
+      <span slot="body">Are you sure you want to remove <strong>{{ deleting.name }}</strong> from the list?</span>
       <div slot="footer">
         <md-button @click="deleteConfirmOpen = false">Cancel</md-button>
         <md-button class="md-warn" @click="deleteName(deleting.index)">Delete</md-button>
@@ -148,7 +148,7 @@ export default {
   .modal-footer div {
     display: flex;
     align-content: center;
-    justify-content: center;
+    justify-content: flex-end;
   }
 }
 
