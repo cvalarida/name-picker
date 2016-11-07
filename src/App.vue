@@ -17,6 +17,7 @@
 
 <script>
 import moment from 'moment'
+moment()
 import NamePane from './components/name-pane'
 import DrawingPane from './components/drawing-pane'
 
@@ -53,49 +54,49 @@ let sortByDate = function (list, asc = false) {
 
 // But for now...
 let people = [
-  { name: 'Bobo' },
-  { name: 'Claudia' },
-  { name: 'Demosthenes' },
-  { name: 'Artaxerxes' },
-  { name: 'Herald' },
-  { name: 'Clyve' },
-  { name: 'Aesop' },
-  { name: 'Josephine' },
-  { name: 'Kyle' },
-  { name: 'Jo' },
-  { name: 'Bonnie' },
-  { name: 'Nevylle' },
-  { name: 'Lester' },
-  { name: 'Ingred' },
-  { name: 'James' },
-  { name: 'Karl' },
-  { name: 'Johann' },
-  { name: 'Aaron' },
-  { name: 'Lyle' }
+  // { name: 'Bobo' },
+  // { name: 'Claudia' },
+  // { name: 'Demosthenes' },
+  // { name: 'Artaxerxes' },
+  // { name: 'Herald' },
+  // { name: 'Clyve' },
+  // { name: 'Aesop' },
+  // { name: 'Josephine' },
+  // { name: 'Kyle' },
+  // { name: 'Jo' },
+  // { name: 'Bonnie' },
+  // { name: 'Nevylle' },
+  // { name: 'Lester' },
+  // { name: 'Ingred' },
+  // { name: 'James' },
+  // { name: 'Karl' },
+  // { name: 'Johann' },
+  // { name: 'Aaron' },
+  // { name: 'Lyle' }
 ]
 
 let history = [
-  {
-    date: moment('2016-10-21'),
-    names: {
-      primary: ['Bobo', 'Clyve', 'Aesop'],
-      alternate: ['Josephine', 'Kyle']
-    }
-  },
-  {
-    date: moment('2016-10-28'),
-    names: {
-      primary: ['Jo', 'Bonnie', 'Nevylle'],
-      alternate: ['Lester', 'Ingred']
-    }
-  },
-  {
-    date: moment('2016-11-4'),
-    names: {
-      primary: ['James', 'Karl', 'Johann'],
-      alternate: ['Aaron', 'Lyle']
-    }
-  }
+  // {
+  //   date: moment('2016-10-21'),
+  //   names: {
+  //     primary: ['Bobo', 'Clyve', 'Aesop'],
+  //     alternate: ['Josephine', 'Kyle']
+  //   }
+  // },
+  // {
+  //   date: moment('2016-10-28'),
+  //   names: {
+  //     primary: ['Jo', 'Bonnie', 'Nevylle'],
+  //     alternate: ['Lester', 'Ingred']
+  //   }
+  // },
+  // {
+  //   date: moment('2016-11-4'),
+  //   names: {
+  //     primary: ['James', 'Karl', 'Johann'],
+  //     alternate: ['Aaron', 'Lyle']
+  //   }
+  // }
 ]
 
 export default {

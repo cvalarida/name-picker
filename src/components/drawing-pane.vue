@@ -26,7 +26,7 @@
 
     <!-- New Drawing Panel -->
     <!-- Really could have pulled this out into its own component -->
-    <md-whiteframe class="new-drawing-panel" md-elevation="1" v-if="newDrawingPanelOpen">
+    <md-whiteframe class="new-drawing-panel" md-elevation="1" v-show="newDrawingPanelOpen">
       <form id="new-drawing-form" @submit.stop.prevent="handleAddButton">
         <md-input-container id="primary-input">
           <label>Primary</label>
@@ -212,22 +212,29 @@ export default {
 @media print {
   .new-drawing-panel { display: none }
   .md-fab.md-fab-bottom-right { display: none }
+  .md-tooltip { display: none }
 
   #drawing-pane #drawing-list {
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
-    justify-content: space-around;
-    flex-wrap: wrap;
+    // display: flex;
+    // flex-direction: row;
+    // align-items: flex-start;
+    // justify-content: space-around;
+    // flex-wrap: wrap;
+
+    display: block;
+    position: absolute;
+    top: 0px;
 
     overflow: visible;
 
     .top-spacer {
       width: 100%;
-      flex-shrink: 0;
+      height: 30px;
     }
 
-    .drawing { position: relative }
+    .drawing {
+      display: inline-block;
+    }
   }
 }
 </style>

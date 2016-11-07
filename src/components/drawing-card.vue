@@ -41,9 +41,15 @@ export default {
 
   .drawing-card {
     width: 22em;
-    position: relative;
+    // position: relative;
+
+    // Reformat it without flex so we can avoid page breaks
+    display: inline-block;
+    -webkit-region-break-inside: avoid;
     page-break-inside: avoid;
+    break-inside: avoid;
     &.md-card { box-shadow: none }
+
 
     .md-card-header .time-ago { display: none }
   }
