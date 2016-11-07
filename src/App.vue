@@ -39,7 +39,7 @@ let sortByName = function (list, asc = true) {
 
 // Shouldn't really be needed once we get NeDB up and running...
 // Assumes all dates are instances of moment
-let sortByDate = function (list, asc = true) {
+let sortByDate = function (list, asc = false) {
   return list.sort((a, b) => {
     if (a.date.isBefore(b.date)) {
       return asc ? -1 : 1
