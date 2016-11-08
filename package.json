@@ -13,6 +13,7 @@
     "lint": "eslint --ext .js,.vue src test/unit/specs test/e2e/specs"
   },
   "dependencies": {
+    "jsonfile": "^2.4.0",
     "material-design-icons": "^3.0.1",
     "moment": "^2.15.2",
     "nedb": "^1.8.0",

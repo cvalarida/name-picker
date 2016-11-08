@@ -1,4 +1,5 @@
 var Datastore = require('nedb')
+var jsonfile = require('jsonfile')
 var exports = {}
 
 const root = __dirname + '/../'
@@ -11,15 +12,38 @@ var loadConfig = function () {
   var definedConfig = {}
 
   try {
-    defaultConfig = require(root + '/config.default.js')
+    defaultConfig = require(root + 'config.default.json')
   } catch (e) {}
 
   try {
-    definedConfig = require(root + '/config.js')
+    definedConfig = require(root + 'config.json')
   } catch (e) {}
 
   exports.config = Object.assign(defaultConfig, definedConfig)
-  console.log(exports.config)
+  // console.log(exports.config)
+}
+
+exports.updateConfig = function (newConfig, reload) {
+  if (reload == undefined)
+    reload = true;
+
+  var config = {}
+  try {
+    config = require(root + 'config.json')
+  } catch (e) {}
+
+  jsonfile.writeFile(root + 'config.json',
+    Object.assign(config, newConfig),
+    { spaces: 2 },
+    (error) => {
+      if (error) {
+        console.error('Could not write to config file: ', error)
+      } else if (reload) {
+        loadConfig()
+        loadDatabase()
+      }
+    }
+  )
 }
 
 ///////////////////
@@ -27,9 +51,7 @@ var loadConfig = function () {
 ///////////////////
 var loadDatabase = function () {
   var loadedDb = function (name, error) {
-    if (!error) {
-      console.log('Loaded ' + name)
-    } else {
+    if (error) {
       console.error('Error loading ' + name, error)
     }
   }
