@@ -74,6 +74,11 @@ var loadDatabase = function () {
     autoload: true
   })
 
+  // Ensure they're indexed
+  db.users.ensureIndex({ fieldName: 'username', unique: true })
+  db.names.ensureIndex({ fieldName: 'name', unique: true })
+  db.drawings.ensureIndex({ fieldName: 'date' })
+
   exports.db = db
 }
 
