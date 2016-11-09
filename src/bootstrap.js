@@ -1,22 +1,25 @@
-var Datastore = require('nedb')
-var jsonfile = require('jsonfile')
+const Datastore = require('nedb')
+const jsonfile = require('jsonfile')
+const path = require('path')
 var exports = {}
 
-const root = __dirname + '/../'
+const root = path.resolve(__dirname, '../')
+const defaultConfigPath = path.resolve(root, 'config/app.default.json')
+const definedConfigPath = path.resolve(root, 'config/app.json')
 
-/////////////////
+// /////////// //
 // Load Config //
-/////////////////
+// /////////// //
 var loadConfig = function () {
   var defaultConfig = {}
   var definedConfig = {}
 
   try {
-    defaultConfig = require(root + 'config.default.json')
+    defaultConfig = require(defaultConfigPath)
   } catch (e) {}
 
   try {
-    definedConfig = require(root + 'config.json')
+    definedConfig = require(definedConfigPath)
   } catch (e) {}
 
   exports.config = Object.assign(defaultConfig, definedConfig)
@@ -24,15 +27,16 @@ var loadConfig = function () {
 }
 
 exports.updateConfig = function (newConfig, reload) {
-  if (reload == undefined)
-    reload = true;
+  if (reload === undefined) {
+    reload = true
+  }
 
   var config = {}
   try {
-    config = require(root + 'config.json')
+    config = require(definedConfigPath)
   } catch (e) {}
 
-  jsonfile.writeFile(root + 'config.json',
+  jsonfile.writeFile(definedConfigPath,
     Object.assign(config, newConfig),
     { spaces: 2 },
     (error) => {
@@ -46,9 +50,9 @@ exports.updateConfig = function (newConfig, reload) {
   )
 }
 
-///////////////////
+// ///////////// //
 // Load Database //
-///////////////////
+// ///////////// //
 var loadDatabase = function () {
   var loadedDb = function (name, error) {
     if (error) {
@@ -58,12 +62,12 @@ var loadDatabase = function () {
 
   // If a collection doesn't exist with the current db name, a new one is created
   var db = {}
-  db.users    = new Datastore({
+  db.users = new Datastore({
     filename: root + `db/${exports.config.db}.users.db`,
     onload: (error) => loadedDb('users', error),
     autoload: true
   })
-  db.names    = new Datastore({
+  db.names = new Datastore({
     filename: root + `db/${exports.config.db}.names.db`,
     onload: (error) => loadedDb('names', error),
     autoload: true
@@ -82,9 +86,9 @@ var loadDatabase = function () {
   exports.db = db
 }
 
-///////////////////////////////////////
+// ///////////////////////////////// //
 // Restart (or start the first time) //
-///////////////////////////////////////
+// ///////////////////////////////// //
 exports.restart = function () {
   loadConfig()
   loadDatabase()
