@@ -15,7 +15,7 @@ module.exports = function (app, bootstrap) {
 
   app.get('/names', function(req, res) {
     // Get the names from the db and send them back in JSON
-    bootstrap.db.names.find({}).exec((err, docs) => {
+    bootstrap.db.names.find({}).sort({ name: 1 }).exec((err, docs) => {
       if (err) {
         console.error(err)
         res.status(500).json({ error: err })
@@ -27,11 +27,33 @@ module.exports = function (app, bootstrap) {
 
   // Remember: Dates are stored as UNIX timestamps
   app.get('/drawings', function(req, res) {
-    // Parse the search filters
-    let filters = {}
+    // Grab the search filters
+    let filters = {
+      // $or: [{ "names.primary": nameQuery }, { "names.alternate": nameQuery }],
+      // date: {
+      //   $gte: req.query.startDate,
+      //   $lte: req.query.endDate
+      // }
+    }
+    if (req.query.name) {
+      let nameQuery = new RegExp(req.query.name, 'i')
+      filters.$or = [
+        { "names.primary": nameQuery },
+        { "names.alternate": nameQuery }
+      ]
+    }
+    if (req.query.startDate) {
+      filters.date = { $gte: parseInt(req.query.startDate) }
+    }
+    if (req.query.endDate) {
+      if (!filters.date) {
+        filters.date = {}
+      }
+      filters.date.$lte = parseInt(req.query.endDate)
+    }
 
     // Get the drawings from the db and send them back in JSON
-    bootstrap.db.drawings.find(filters).sort({ date: 1 }).exec((err, docs) => {
+    bootstrap.db.drawings.find(filters).sort({ date: -1 }).exec((err, docs) => {
       if (err) {
         console.error(err)
         res.status(500).json({ error: err })
