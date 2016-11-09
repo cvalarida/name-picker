@@ -10,6 +10,10 @@ var webpackConfig = process.env.NODE_ENV === 'testing'
   ? require('./webpack.prod.conf')
   : require('./webpack.dev.conf')
 
+// Terrible name, but app is taken...
+var bootstrap = require('../src/bootstrap')
+var registerRoutes = require('../src/routes')
+
 // default port where dev server listens for incoming traffic
 var port = process.env.PORT || config.dev.port
 // Define HTTP proxies to your custom API backend
@@ -47,8 +51,8 @@ Object.keys(proxyTable).forEach(function (context) {
 
 // handle fallback for HTML5 history API
 app.use(require('connect-history-api-fallback')())
-
 // serve webpack bundle output
+
 app.use(devMiddleware)
 
 // enable hot-reload and state-preserving
@@ -58,6 +62,9 @@ app.use(hotMiddleware)
 // serve pure static assets
 var staticPath = path.posix.join(config.dev.assetsPublicPath, config.dev.assetsSubDirectory)
 app.use(staticPath, express.static('./static'))
+
+// Register app routes
+registerRoutes(app, bootstrap)
 
 module.exports = app.listen(port, function (err) {
   if (err) {

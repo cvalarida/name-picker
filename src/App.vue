@@ -170,50 +170,50 @@ export default {
     },
 
     drawNames: function (newDrawingObject) {
-      const { primary, alternate, date } = newDrawingObject
-      let chosenCount = primary + alternate
-      let drawing = {
-        date,
-        names: { primary: [], alternate: [] }
-      }
-
-      // If there aren't enough names, use them all and issue a warning...for now
-      if (chosenCount > this.people.length) {
-        console.warn(`There aren't enough names in the list of people to pick ${primary} primary and ${alternate} alternate people.`)
-        chosenCount = this.people.length
-      }
-
-      let randBetween = function getRandomInt (min, max) {
-        min = Math.ceil(min)
-        max = Math.floor(max)
-        return Math.floor(Math.random() * (max - min)) + min
-      }
-
-      // Generate primary + secondary unique numbers from 0 to people.length
-      let chosenIndexes = []
-      for (var i = 0; i < chosenCount; i++) {
-        let rIndex = randBetween(0, this.people.length)
-
-        if (chosenIndexes.includes(rIndex)) {
-          i--
-        } else {
-          chosenIndexes.push(rIndex)
-        }
-      }
-
-      // Pull out the names
-      for (i = 0; i < chosenCount; i++) {
-        if (i < primary) {
-          drawing.names.primary.push(this.people[chosenIndexes[i]].name)
-        } else {
-          drawing.names.alternate.push(this.people[chosenIndexes[i]].name)
-        }
-      }
+      // const { primary, alternate, date } = newDrawingObject
+      // let chosenCount = primary + alternate
+      // let drawing = {
+      //   date,
+      //   names: { primary: [], alternate: [] }
+      // }
+      //
+      // // If there aren't enough names, use them all and issue a warning...for now
+      // if (chosenCount > this.people.length) {
+      //   console.warn(`There aren't enough names in the list of people to pick ${primary} primary and ${alternate} alternate people.`)
+      //   chosenCount = this.people.length
+      // }
+      //
+      // let randBetween = function getRandomInt (min, max) {
+      //   min = Math.ceil(min)
+      //   max = Math.floor(max)
+      //   return Math.floor(Math.random() * (max - min)) + min
+      // }
+      //
+      // // Generate primary + secondary unique numbers from 0 to people.length
+      // let chosenIndexes = []
+      // for (var i = 0; i < chosenCount; i++) {
+      //   let rIndex = randBetween(0, this.people.length)
+      //
+      //   if (chosenIndexes.includes(rIndex)) {
+      //     i--
+      //   } else {
+      //     chosenIndexes.push(rIndex)
+      //   }
+      // }
+      //
+      // // Pull out the names
+      // for (i = 0; i < chosenCount; i++) {
+      //   if (i < primary) {
+      //     drawing.names.primary.push(this.people[chosenIndexes[i]].name)
+      //   } else {
+      //     drawing.names.alternate.push(this.people[chosenIndexes[i]].name)
+      //   }
+      // }
 
       // Add it to the history
       // Ideally, we wouldn't do it like this, but for now...
-      this.history.push(drawing)
-      this.history = sortByDate(this.history)
+      // this.history.push(drawing)
+      // this.history = sortByDate(this.history)
     }
   },
   data () {
