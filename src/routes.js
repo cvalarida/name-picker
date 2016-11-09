@@ -1,6 +1,7 @@
 'use strict'
 
 const bodyParser = require('body-parser')
+require('./polyfills')
 
 /**
  * Registers the express routes.
@@ -74,11 +75,11 @@ module.exports = function (app, bootstrap) {
         res.status(500).json({ error: err })
       } else {
         // Create a drawing...
-        // Running the node dev server doesn't like this deconstruction
-        // const { primary, alternate, date } = req.body.drawingSpec
-        const primary = req.body.drawingSpec.primary
-        const alternate = req.body.drawingSpec.alternate
-        const date = req.body.drawingSpec.date
+        // When running the server, can't use ES6, it would seem
+        // const { primary, alternate, date } = req.body
+        const primary = req.body.primary
+        const alternate = req.body.alternate
+        const date = req.body.date
         let chosenCount = primary + alternate
         let drawing = {
           date,
@@ -119,9 +120,9 @@ module.exports = function (app, bootstrap) {
         }
 
         // Insert the new drawing into the db
-        bootstrap.db.names.insert(drawing, (err) => {
+        bootstrap.db.drawings.insert(drawing, (err) => {
           if (err) {
-            console.error(err)
+            console.error(err) // Does console.error even work here?
             res.status(500).json({ succcess: false, error: err })
           } else {
             res.json({ success: true })
