@@ -41,13 +41,14 @@ module.exports = function (app, bootstrap) {
   })
 
   app.post('/names', function(req, res) {
-    let names = req.body.names
-
+    let names = req.body
+    console.log("Names from request:", names)
     // Format them so the first letter is for-sure capitalized
     names = names.map((n) => {
-      return n.split(' ').map((word) => {
+      n.name = n.name.split(' ').map((word) => {
         return word[0].toUpperCase() + word.slice(1)
       }).join(' ')
+      return n
     });
 
     // Insert the names into the db
