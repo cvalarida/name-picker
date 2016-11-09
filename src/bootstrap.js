@@ -63,17 +63,17 @@ var loadDatabase = function () {
   // If a collection doesn't exist with the current db name, a new one is created
   var db = {}
   db.users = new Datastore({
-    filename: root + `db/${exports.config.db}.users.db`,
+    filename: root + `/db/${exports.config.db}.users.db`,
     onload: (error) => loadedDb('users', error),
     autoload: true
   })
   db.names = new Datastore({
-    filename: root + `db/${exports.config.db}.names.db`,
+    filename: root + `/db/${exports.config.db}.names.db`,
     onload: (error) => loadedDb('names', error),
     autoload: true
   })
   db.drawings = new Datastore({
-    filename: root + `db/${exports.config.db}.drawings.db`,
+    filename: root + `/db/${exports.config.db}.drawings.db`,
     onload: (error) => loadedDb('drawings', error),
     autoload: true
   })
