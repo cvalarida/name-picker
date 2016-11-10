@@ -107,7 +107,6 @@ export default {
      */
     fetchDrawings: function (searchObject) {
       const { searchString, startDate, endDate } = searchObject
-      console.log(`Searching for ${searchString} between`, startDate, ' and ', endDate)
 
       let params = {}
       if (searchString) {
