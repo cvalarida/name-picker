@@ -34,7 +34,6 @@ export default {
   },
   methods: {
     login: function () {
-      console.log(`username: ${this.username}, password: ${this.password}`)
       this.$emit('login', { username: this.username, password: this.password })
     }
   }

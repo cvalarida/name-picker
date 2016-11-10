@@ -47,7 +47,11 @@ module.exports = function (app, bootstrap) {
               if (success) {
                 // Successfully logged in
                 // Make a new json token
-                const newToken = jwt.sign({ user: user.username }, bootstrap.config.secret)
+                const newToken = jwt.sign({
+                  // Set the expiration to an hour from login
+                  exp: Math.floor(Date.now() / 1000) + (60 * 60),
+                  user: user.username
+                }, bootstrap.config.secret)
 
                 res.json({ success: true, jwt: newToken })
               } else {

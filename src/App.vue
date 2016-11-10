@@ -58,6 +58,7 @@ export default {
             // If it's a jwt error, log out
             // TODO: Check if it's a jwt error
             this.loggedIn = false
+            this.loginErrorMessage = 'Looks like you\'ve been logged out'
             window.localStorage.removeItem('token')
             // console.error(err)
             reject(err)
