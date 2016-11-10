@@ -138,6 +138,8 @@ export default {
       let params = {}
       if (searchString) {
         params.name = searchString
+        // Update search bar
+        this.searchString = searchString
       }
       if (startDate) {
         params.startDate = startDate.unix()
