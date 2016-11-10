@@ -17,12 +17,13 @@ module.exports = function (app, bootstrap) {
   app.use(bodyParser.urlencoded({ extended: true }))
 
   // Protect API endpoints
-  app.use(expressJWT({ secret: bootstrap.config.secret }).unless({ path: ['/token']}))
+  app.use(expressJWT({ secret: bootstrap.config.secret }).unless({
+    path: ['/token', '/favicon.ico']
+  }))
 
   // Log in
   app.post('/token', function(req, res) {
     // The following gets really...indented; there may be a better way
-    console.log("Login Request: ", req.body)
 
     // Find the user in question
     bootstrap.db.users.find({ username: req.body.username }, (err, user) => {
@@ -31,25 +32,22 @@ module.exports = function (app, bootstrap) {
         console.error(err)
         res.status(500).json({ error: err })
       } else {
+        user = user[0]
         // Username not found; return Unauthorized
-        if (user === null) {
+        if (!user) {
           res.status(401).json({ success: false })
         } else {
           // Check password
-          console.log(`  Found ${req.body.username}:`, user)
-          crypto.compare(req.body.password, user[0].password, (err, success) => {
+          crypto.compare(req.body.password, user.password, (err, success) => {
             // In case something funky happens...
             if (err) {
               console.error(err)
               res.status(500).json({ error: err })
             } else {
               if (success) {
-                console.log(`  Signing with secret: (${typeof bootstrap.config.secret})`, bootstrap.config.secret)
                 // Successfully logged in
                 // Make a new json token
-                // First make sure we don't pass back the password
-                delete user.password
-                const newToken = jwt.sign({ user }, bootstrap.config.secret)
+                const newToken = jwt.sign({ user: user.username }, bootstrap.config.secret)
 
                 res.json({ success: true, jwt: newToken })
               } else {

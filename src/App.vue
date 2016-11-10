@@ -14,6 +14,12 @@
       @search="fetchDrawings"
       @drawNames="drawNames"
     ></drawing-pane>
+
+    <login-panel
+      v-if="!loggedIn"
+      :errorMessage="loginErrorMessage"
+      @login="login"
+    ></login-panel>
   </div>
 </template>
 
@@ -21,6 +27,7 @@
 import axios from 'axios'
 import NamePane from './components/name-pane'
 import DrawingPane from './components/drawing-pane'
+import LoginPanel from './components/login'
 
 // TODO: Make errors visible to the user
 
@@ -28,12 +35,16 @@ export default {
   name: 'app',
   components: {
     NamePane,
-    DrawingPane
+    DrawingPane,
+    LoginPanel
   },
   methods: {
     callApi: function (method, url, options) {
       return new Promise((resolve, reject) => {
         if (!window.localStorage.token) {
+          // Just in case...
+          this.loggedIn = false
+          this.loginErrorMessage = 'Looks like you\'ve been logged out'
           return reject({ jwt: 'No token' })
         }
 
@@ -54,14 +65,19 @@ export default {
       })
     },
 
-    login: function (username, password) {
+    login: function (loginObject) {
+      const { username, password } = loginObject
       axios.post('/token', { username, password })
         .then((res) => {
           window.localStorage.token = res.data.jwt
+          this.loggedIn = true
           this.fetchNames()
           this.fetchDrawings()
         })
-        .catch((err) => console.error(err))
+        .catch((err) => {
+          console.error(err)
+          this.loginErrorMessage = 'Invalid username or password.'
+        })
     },
 
     fetchNames: function () {
@@ -141,7 +157,8 @@ export default {
       history: [],
       searchString: null,
       // True if we've got a token
-      loggedIn: !!window.localStorage.token
+      loggedIn: !!window.localStorage.token,
+      loginErrorMessage: ''
     }
   },
   beforeMount: function () {
