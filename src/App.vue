@@ -76,7 +76,6 @@ export default {
 
       // Turn it into an array of names separated by newlines
       names = names.split(/\r?\n/)
-      // console.log(names)
       for (var name of names) {
         if (name !== '') {
           this.people.push({ name })
