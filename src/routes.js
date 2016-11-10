@@ -65,7 +65,6 @@ module.exports = function (app, bootstrap) {
 
   app.post('/names', function(req, res) {
     let names = req.body
-    console.log("Names from request:", names)
     // Format them so the first letter is for-sure capitalized
     names = names.map((n) => {
       n.name = n.name.split(' ').map((word) => {
