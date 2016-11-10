@@ -4,12 +4,12 @@
       :people="people"
       @addNames="addNames"
       @removeName="removeName"
-      @search="search"
+      @search="fetchDrawings"
     ></name-pane>
     <drawing-pane
-      :history="filteredHistory"
+      :history="history"
       :searchString="searchString"
-      @search="search"
+      @search="fetchDrawings"
       @drawNames="drawNames"
     ></drawing-pane>
   </div>
@@ -18,10 +18,9 @@
 <script>
 import moment from 'moment'
 moment()
+import axios from 'axios'
 import NamePane from './components/name-pane'
 import DrawingPane from './components/drawing-pane'
-
-// TODO: Get the collections here
 
 let sortByName = function (list, asc = true) {
   return list.sort((a, b) => {
@@ -40,64 +39,17 @@ let sortByName = function (list, asc = true) {
 
 // Shouldn't really be needed once we get NeDB up and running...
 // Assumes all dates are instances of moment
-let sortByDate = function (list, asc = false) {
-  return list.sort((a, b) => {
-    if (a.date.isBefore(b.date)) {
-      return asc ? -1 : 1
-    } else if (b.date.isBefore(a.date)) {
-      return asc ? 1 : -1
-    } else {
-      return 0
-    }
-  })
-}
-
-// But for now...
-let people = [
-  // { name: 'Bobo' },
-  // { name: 'Claudia' },
-  // { name: 'Demosthenes' },
-  // { name: 'Artaxerxes' },
-  // { name: 'Herald' },
-  // { name: 'Clyve' },
-  // { name: 'Aesop' },
-  // { name: 'Josephine' },
-  // { name: 'Kyle' },
-  // { name: 'Jo' },
-  // { name: 'Bonnie' },
-  // { name: 'Nevylle' },
-  // { name: 'Lester' },
-  // { name: 'Ingred' },
-  // { name: 'James' },
-  // { name: 'Karl' },
-  // { name: 'Johann' },
-  // { name: 'Aaron' },
-  // { name: 'Lyle' }
-]
-
-let history = [
-  // {
-  //   date: moment('2016-10-21'),
-  //   names: {
-  //     primary: ['Bobo', 'Clyve', 'Aesop'],
-  //     alternate: ['Josephine', 'Kyle']
-  //   }
-  // },
-  // {
-  //   date: moment('2016-10-28'),
-  //   names: {
-  //     primary: ['Jo', 'Bonnie', 'Nevylle'],
-  //     alternate: ['Lester', 'Ingred']
-  //   }
-  // },
-  // {
-  //   date: moment('2016-11-4'),
-  //   names: {
-  //     primary: ['James', 'Karl', 'Johann'],
-  //     alternate: ['Aaron', 'Lyle']
-  //   }
-  // }
-]
+// let sortByDate = function (list, asc = false) {
+//   return list.sort((a, b) => {
+//     if (a.date.isBefore(b.date)) {
+//       return asc ? -1 : 1
+//     } else if (b.date.isBefore(a.date)) {
+//       return asc ? 1 : -1
+//     } else {
+//       return 0
+//     }
+//   })
+// }
 
 export default {
   name: 'app',
@@ -106,6 +58,16 @@ export default {
     DrawingPane
   },
   methods: {
+    fetchNames: function () {
+      axios.get('/names')
+        .then((res) => {
+          this.people = res.data
+        })
+        .catch((err) => {
+          console.error(err)
+        })
+    },
+
     addNames: function (names) {
       // Add the names to the list...
       // Ideally, we'd add the names to the right position to start with, but
@@ -143,87 +105,49 @@ export default {
      *     endDate: Moment instance
      *   }
      */
-    search: function (searchObject) {
+    fetchDrawings: function (searchObject) {
       const { searchString, startDate, endDate } = searchObject
       console.log(`Searching for ${searchString} between`, startDate, ' and ', endDate)
-      // Filter the history based on the search string
-      // It's perhaps not elegant, but it works.
 
-      // Make sure the search bar is up to date
-      this.searchString = searchString
+      let params = {}
+      if (searchString) {
+        params.name = searchString
+      }
+      if (startDate) {
+        params.startDate = startDate.unix()
+      }
+      if (endDate) {
+        params.endDate = endDate.unix()
+      }
 
-      const re = new RegExp(searchString, 'i')
-
-      this.filteredHistory = history.filter((drawing) => {
-        // Ensure the dates are right
-        if ((startDate && drawing.date.isBefore(startDate)) ||
-          (endDate && drawing.date.isAfter(endDate))) {
-          return false
-        }
-
-        // just slap them all together--it's not perfect, but it should help
-        //  performance (testing needed)
-        return re.test(drawing.names.primary.join(' ') +
-          ' ' +
-          drawing.names.alternate.join(' '))
-      })
+      axios.get('/drawings', { params })
+        .then((res) => {
+          this.history = res.data
+        })
+        .catch((err) => {
+          console.error(err)
+        })
     },
 
     drawNames: function (newDrawingObject) {
       // const { primary, alternate, date } = newDrawingObject
-      // let chosenCount = primary + alternate
-      // let drawing = {
-      //   date,
-      //   names: { primary: [], alternate: [] }
-      // }
-      //
-      // // If there aren't enough names, use them all and issue a warning...for now
-      // if (chosenCount > this.people.length) {
-      //   console.warn(`There aren't enough names in the list of people to pick ${primary} primary and ${alternate} alternate people.`)
-      //   chosenCount = this.people.length
-      // }
-      //
-      // let randBetween = function getRandomInt (min, max) {
-      //   min = Math.ceil(min)
-      //   max = Math.floor(max)
-      //   return Math.floor(Math.random() * (max - min)) + min
-      // }
-      //
-      // // Generate primary + secondary unique numbers from 0 to people.length
-      // let chosenIndexes = []
-      // for (var i = 0; i < chosenCount; i++) {
-      //   let rIndex = randBetween(0, this.people.length)
-      //
-      //   if (chosenIndexes.includes(rIndex)) {
-      //     i--
-      //   } else {
-      //     chosenIndexes.push(rIndex)
-      //   }
-      // }
-      //
-      // // Pull out the names
-      // for (i = 0; i < chosenCount; i++) {
-      //   if (i < primary) {
-      //     drawing.names.primary.push(this.people[chosenIndexes[i]].name)
-      //   } else {
-      //     drawing.names.alternate.push(this.people[chosenIndexes[i]].name)
-      //   }
-      // }
-
-      // Add it to the history
-      // Ideally, we wouldn't do it like this, but for now...
-      // this.history.push(drawing)
-      // this.history = sortByDate(this.history)
+      // Send the request to draw the names
+      // Get the drawings again
     }
   },
   data () {
     return {
-      imgAlt: "I'm an image title!",
-      people: sortByName(people),
-      history: sortByDate(history),
-      filteredHistory: history,
+      people: [],
+      history: [],
       searchString: null
     }
+  },
+  beforeMount: function () {
+    // Get the names
+    this.fetchNames()
+
+    // And the drawings
+    this.fetchDrawings({ searchString: '' })
   }
 }
 </script>

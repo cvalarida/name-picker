@@ -3,10 +3,10 @@
   <md-card md-with-hover v-md-ink-ripple class="drawing-card has-ripple">
     <md-card-header>
       <md-card-header-text>
-        <div class="md-title">{{ drawing.date.format('MMMM D, YYYY') }}</div>
+        <div class="md-title">{{ date.format('MMMM D, YYYY') }}</div>
       </md-card-header-text>
 
-      <div class="time-ago">{{ drawing.date.fromNow() }}</div>
+      <div class="time-ago">{{ date.fromNow() }}</div>
     </md-card-header>
 
     <md-card-content>
@@ -17,8 +17,15 @@
 </template>
 
 <script>
+import moment from 'moment'
+
 export default {
-  props: ['drawing']
+  props: ['drawing'],
+  computed: {
+    'date': function () {
+      return moment.unix(this.drawing.date)
+    }
+  }
 }
 </script>
 
