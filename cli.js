@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 var app = require('./src/bootstrap')
 const vorpal = require('vorpal')()
@@ -97,6 +97,20 @@ vorpal.command('list users')
         docs.forEach((doc, index) => v.log(vorpal.chalk[index % 2 == 0 ? 'white' : 'green'](doc.username)))
       }
 
+      cb()
+    })
+  })
+
+// Generate JWT secret
+vorpal.command('generate secret', 'Generates a new secret key to encode the JWT tokens with.')
+  .action(function (args, cb) {
+    crypto.genSalt((err, salt) => {
+      if (err) {
+        console.error(err)
+      } else {
+        app.updateConfig({ secret: salt })
+        this.log(vorpal.chalk['green']('Successfully generated secret.'))
+      }
       cb()
     })
   })
