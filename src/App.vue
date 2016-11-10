@@ -40,9 +40,10 @@ export default {
     },
 
     addNames: function (names) {
-      axios.post('/names', { params: { names } })
+      names = names.split(/\r?\n/)
+      axios.post('/names', names)
         .then((res) => this.fetchNames())
-        .catch((err) => console.err(err))
+        .catch((err) => console.error(err))
     },
 
     // This'll change when we get NeDB up

@@ -67,14 +67,15 @@ module.exports = function (app, bootstrap) {
     let names = req.body
     // Format them so the first letter is for-sure capitalized
     names = names.map((n) => {
-      n.name = n.name.split(' ').map((word) => {
+      var person = {}
+      person.name = n.split(' ').map((word) => {
         return word[0].toUpperCase() + word.slice(1)
       }).join(' ')
-      return n
+      return person
     });
 
     // Insert the names into the db
-    bootstrap.db.names.insert(names, (err) => {
+    bootstrap.db.names.insert(names, (err, docs) => {
       if (err) {
         console.error(err)
         res.status(500).json({ succcess: false, error: err })
