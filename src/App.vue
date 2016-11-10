@@ -3,6 +3,7 @@
     <name-pane
       v-if="loggedIn"
       :people="people"
+      :addNamesErrorMessage="addNamesErrorMessage"
       @addNames="addNames"
       @removeName="removeName"
       @search="fetchDrawings"
@@ -55,12 +56,13 @@ export default {
           headers: { 'Authorization': `Bearer ${window.localStorage.token}` }
         }).then((res) => resolve(res))
           .catch((err) => {
-            // If it's a jwt error, log out
-            // TODO: Check if it's a jwt error
-            this.loggedIn = false
-            this.loginErrorMessage = 'Looks like you\'ve been logged out'
-            window.localStorage.removeItem('token')
-            // console.error(err)
+            // If we're unauthorized, log out
+            if (err.response.status === 401) {
+              this.loggedIn = false
+              this.loginErrorMessage = 'Looks like you\'ve been logged out'
+              window.localStorage.removeItem('token')
+            }
+            console.error(err)
             reject(err)
           })
       })
@@ -75,8 +77,7 @@ export default {
           this.fetchNames()
           this.fetchDrawings()
         })
-        .catch((err) => {
-          console.error(err)
+        .catch(() => {
           this.loginErrorMessage = 'Invalid username or password.'
         })
     },
@@ -84,7 +85,7 @@ export default {
     fetchNames: function () {
       this.callApi('get', '/names')
         .then((res) => { this.people = res.data })
-        .catch((err) => { console.error(err) })
+        // .catch((err) => { console.error(err) })
     },
 
     /**
@@ -94,14 +95,24 @@ export default {
     addNames: function (names) {
       names = names.split(/\r?\n/)
       this.callApi('post', '/names', { data: names })
-        .then((res) => this.fetchNames())
-        .catch((err) => { console.error(err) })
+        .then((res) => {
+          this.addNamesErrorMessage = ''
+          this.fetchNames()
+        })
+        .catch((err) => {
+          let error = err.response.data.error
+          if (error && error.errorType === 'uniqueViolated') {
+            this.addNamesErrorMessage = `${error.key} is already in the list.`
+          } else {
+            this.addNamesErrorMessage = 'Failed to add name' + ((names.length > 1) ? 's.' : '.')
+          }
+        })
     },
 
     removeName: function (id) {
       this.callApi('delete', `/name?id=${id}`)
         .then((res) => this.fetchNames())
-        .catch((err) => { console.error(err) })
+        // .catch((err) => { console.error(err) })
     },
 
     /**
@@ -137,7 +148,7 @@ export default {
 
       this.callApi('get', '/drawings', { params })
         .then((res) => { this.history = res.data })
-        .catch((err) => { console.error(err) })
+        // .catch((err) => { console.error(err) })
     },
 
     drawNames: function (newDrawingObject) {
@@ -149,7 +160,7 @@ export default {
         // Reload the list of drawings
         // There's a better way to do this to reduce network traffic, but...
         .then((res) => this.fetchDrawings())
-        .catch((err) => { console.error(err) })
+        // .catch((err) => { console.error(err) })
     }
   },
   data () {
@@ -159,7 +170,8 @@ export default {
       searchString: null,
       // True if we've got a token
       loggedIn: !!window.localStorage.token,
-      loginErrorMessage: ''
+      loginErrorMessage: '',
+      addNamesErrorMessage: ''
     }
   },
   beforeMount: function () {

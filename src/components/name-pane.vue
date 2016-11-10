@@ -25,6 +25,7 @@
           <md-icon>add</md-icon>
           Add
         </md-button>
+        <div id="add-names-error-message">{{ addNamesErrorMessage }}</div>
       </md-tab>
     </md-tabs>
 
@@ -49,7 +50,8 @@ export default {
     modal
   },
   props: {
-    people: Array
+    people: Array,
+    addNamesErrorMessage: String
   },
   methods: {
     // Pass the new name back to the app to add it to the list
@@ -109,6 +111,10 @@ export default {
     overflow-y: auto;
     height: 100% !important;
     // direction: rtl;
+  }
+
+  #add-names-error-message {
+    color: red;
   }
 
   .md-list-item .md-list-item-holder {
