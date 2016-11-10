@@ -25,6 +25,28 @@ module.exports = function (app, bootstrap) {
     })
   })
 
+  app.post('/names', function(req, res) {
+    let names = req.body
+    // Format them so the first letter is for-sure capitalized
+    names = names.map((n) => {
+      var person = {}
+      person.name = n.split(' ').map((word) => {
+        return word[0].toUpperCase() + word.slice(1)
+      }).join(' ')
+      return person
+    });
+
+    // Insert the names into the db
+    bootstrap.db.names.insert(names, (err, docs) => {
+      if (err) {
+        console.error(err)
+        res.status(500).json({ succcess: false, error: err })
+      } else {
+        res.json({ success: true })
+      }
+    })
+  })
+
   app.delete('/name', function (req, res) {
     bootstrap.db.names.remove({ _id: req.query.id }, {}, (err, numRemoved) => {
       if (err) {
@@ -70,28 +92,6 @@ module.exports = function (app, bootstrap) {
         res.status(500).json({ error: err })
       } else {
         res.json(docs)
-      }
-    })
-  })
-
-  app.post('/names', function(req, res) {
-    let names = req.body
-    // Format them so the first letter is for-sure capitalized
-    names = names.map((n) => {
-      var person = {}
-      person.name = n.split(' ').map((word) => {
-        return word[0].toUpperCase() + word.slice(1)
-      }).join(' ')
-      return person
-    });
-
-    // Insert the names into the db
-    bootstrap.db.names.insert(names, (err, docs) => {
-      if (err) {
-        console.error(err)
-        res.status(500).json({ succcess: false, error: err })
-      } else {
-        res.json({ success: true })
       }
     })
   })
