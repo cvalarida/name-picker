@@ -25,7 +25,17 @@ module.exports = function (app, bootstrap) {
     })
   })
 
-  // Remember: Dates are stored as UNIX timestamps
+  app.delete('/name', function (req, res) {
+    bootstrap.db.names.remove({ _id: req.query.id }, {}, (err, numRemoved) => {
+      if (err) {
+        console.error(err)
+        res.status(500).json({ error: err })
+      } else {
+        res.json({ success: true })
+      }
+    })
+  })
+
   app.get('/drawings', function(req, res) {
     // Grab the search filters
     let filters = {
@@ -53,6 +63,7 @@ module.exports = function (app, bootstrap) {
     }
 
     // Get the drawings from the db and send them back in JSON
+    // Dates are stored as unix timestamps for easy sorting
     bootstrap.db.drawings.find(filters).sort({ date: -1 }).exec((err, docs) => {
       if (err) {
         console.error(err)

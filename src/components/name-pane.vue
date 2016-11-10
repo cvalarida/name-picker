@@ -5,9 +5,9 @@
       <md-tab md-label="List" md-icon="list">
         <div class="left-scroll-bar">
           <md-list class="name-list">
-            <md-list-item v-for="(person, index) in people" class="name">
+            <md-list-item v-for="person in people" class="name">
               <span @click="searchFor(person.name)">{{ person.name }}</span>
-              <md-button class="md-icon-button delete-person-button" @click="openDeleteConfirm(person, index)">
+              <md-button class="md-icon-button delete-person-button" @click="openDeleteConfirm(person)">
                 <md-icon>delete</md-icon>
               </md-button>
             </md-list-item>
@@ -34,7 +34,7 @@
       <span slot="body">Are you sure you want to remove <strong>{{ deleting.name }}</strong> from the list?</span>
       <div slot="footer">
         <md-button @click="deleteConfirmOpen = false">Cancel</md-button>
-        <md-button class="md-warn" @click="deleteName(deleting.index)">Delete</md-button>
+        <md-button class="md-warn" @click="deleteName(deleting._id)">Delete</md-button>
       </div>
     </modal>
   </md-whiteframe>
@@ -58,17 +58,16 @@ export default {
       this.newNames = ''
     },
 
-    openDeleteConfirm: function (person, index) {
+    openDeleteConfirm: function (person) {
       // Show the name of whom we're deleting
-      person.index = index
       this.deleting = person
 
       this.deleteConfirmOpen = true
     },
 
     // May change this to name later
-    deleteName: function (index) {
-      this.$emit('removeName', index)
+    deleteName: function (id) {
+      this.$emit('removeName', id)
       this.deleteConfirmOpen = false
     },
 

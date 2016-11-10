@@ -39,6 +39,10 @@ export default {
         })
     },
 
+    /**
+     * For both addNames and removeName, we could return the list of names after
+     *  the action, but for development ease for now, we'll just call fetchNames
+     */
     addNames: function (names) {
       names = names.split(/\r?\n/)
       axios.post('/names', names)
@@ -46,10 +50,10 @@ export default {
         .catch((err) => console.error(err))
     },
 
-    // This'll change when we get NeDB up
-    // May change to use the name instead of the index...unless we give them IDs
-    removeName: function (index) {
-      this.people.splice(index, 1)
+    removeName: function (id) {
+      axios.delete(`/name?id=${id}`)
+        .then((res) => this.fetchNames())
+        .catch((err) => console.error(err))
     },
 
     /**
