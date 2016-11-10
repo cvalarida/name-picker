@@ -20,6 +20,21 @@ import axios from 'axios'
 import NamePane from './components/name-pane'
 import DrawingPane from './components/drawing-pane'
 
+let callApi = function (method, url, options) {
+  return new Promise((resolve, reject) => {
+    axios({
+      method,
+      url,
+      ...options
+    }).then((res) => resolve(res))
+      .catch((err) => {
+        // If it's a jwt error, log out
+        // console.error(err)
+        reject(err)
+      })
+  })
+}
+
 // TODO: Make errors visible to the user
 
 export default {
@@ -30,13 +45,9 @@ export default {
   },
   methods: {
     fetchNames: function () {
-      axios.get('/names')
-        .then((res) => {
-          this.people = res.data
-        })
-        .catch((err) => {
-          console.error(err)
-        })
+      callApi('get', '/names')
+        .then((res) => { this.people = res.data })
+        .catch((err) => { console.error(err) })
     },
 
     /**
@@ -45,15 +56,15 @@ export default {
      */
     addNames: function (names) {
       names = names.split(/\r?\n/)
-      axios.post('/names', names)
+      callApi('post', '/names', { data: names })
         .then((res) => this.fetchNames())
-        .catch((err) => console.error(err))
+        .catch((err) => { console.error(err) })
     },
 
     removeName: function (id) {
-      axios.delete(`/name?id=${id}`)
+      callApi('delete', `/name?id=${id}`)
         .then((res) => this.fetchNames())
-        .catch((err) => console.error(err))
+        .catch((err) => { console.error(err) })
     },
 
     /**
@@ -87,9 +98,9 @@ export default {
         params.endDate = endDate.unix()
       }
 
-      axios.get('/drawings', { params })
+      callApi('get', '/drawings', { params })
         .then((res) => { this.history = res.data })
-        .catch((err) => console.error(err))
+        .catch((err) => { console.error(err) })
     },
 
     drawNames: function (newDrawingObject) {
@@ -97,11 +108,11 @@ export default {
       newDrawingObject.date = newDrawingObject.date.unix()
 
       // Send the request to draw the names
-      axios.post('/drawings', { ...newDrawingObject })
+      callApi('post', '/drawings', { data: newDrawingObject })
         // Reload the list of drawings
         // There's a better way to do this to reduce network traffic, but...
         .then((res) => this.fetchDrawings())
-        .catch((err) => console.error(err))
+        .catch((err) => { console.error(err) })
     }
   },
   data () {
