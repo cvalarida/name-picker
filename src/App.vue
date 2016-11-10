@@ -16,40 +16,11 @@
 </template>
 
 <script>
-import moment from 'moment'
-moment()
 import axios from 'axios'
 import NamePane from './components/name-pane'
 import DrawingPane from './components/drawing-pane'
 
-let sortByName = function (list, asc = true) {
-  return list.sort((a, b) => {
-    var nameA = a.name.toLowerCase()
-    var nameB = b.name.toLowerCase()
-
-    if (nameA < nameB) {
-      return asc ? -1 : 1
-    } else if (nameA > nameB) {
-      return asc ? 1 : -1
-    } else {
-      return 0
-    }
-  })
-}
-
-// Shouldn't really be needed once we get NeDB up and running...
-// Assumes all dates are instances of moment
-// let sortByDate = function (list, asc = false) {
-//   return list.sort((a, b) => {
-//     if (a.date.isBefore(b.date)) {
-//       return asc ? -1 : 1
-//     } else if (b.date.isBefore(a.date)) {
-//       return asc ? 1 : -1
-//     } else {
-//       return 0
-//     }
-//   })
-// }
+// TODO: Make errors visible to the user
 
 export default {
   name: 'app',
@@ -69,19 +40,9 @@ export default {
     },
 
     addNames: function (names) {
-      // Add the names to the list...
-      // Ideally, we'd add the names to the right position to start with, but
-      //  that's more hassle than I want to deal with for only like 100 records
-      //  that'll already be sorted by the time we get here, so...
-
-      // Turn it into an array of names separated by newlines
-      names = names.split(/\r?\n/)
-      for (var name of names) {
-        if (name !== '') {
-          this.people.push({ name })
-        }
-      }
-      this.people = sortByName(this.people)
+      axios.post('/names', { params: { names } })
+        .then((res) => this.fetchNames())
+        .catch((err) => console.err(err))
     },
 
     // This'll change when we get NeDB up
@@ -105,6 +66,9 @@ export default {
      *   }
      */
     fetchDrawings: function (searchObject) {
+      if (!searchObject) {
+        searchObject = {}
+      }
       const { searchString, startDate, endDate } = searchObject
 
       let params = {}
@@ -119,18 +83,20 @@ export default {
       }
 
       axios.get('/drawings', { params })
-        .then((res) => {
-          this.history = res.data
-        })
-        .catch((err) => {
-          console.error(err)
-        })
+        .then((res) => { this.history = res.data })
+        .catch((err) => console.error(err))
     },
 
     drawNames: function (newDrawingObject) {
-      // const { primary, alternate, date } = newDrawingObject
+      // Make the date a unix timestamp
+      newDrawingObject.date = newDrawingObject.date.unix()
+
       // Send the request to draw the names
-      // Get the drawings again
+      axios.post('/drawings', { ...newDrawingObject })
+        // Reload the list of drawings
+        // There's a better way to do this to reduce network traffic, but...
+        .then((res) => this.fetchDrawings())
+        .catch((err) => console.error(err))
     }
   },
   data () {
