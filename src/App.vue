@@ -1,12 +1,14 @@
 <template>
   <div id="app" v-md-theme="'default'">
     <name-pane
+      v-if="loggedIn"
       :people="people"
       @addNames="addNames"
       @removeName="removeName"
       @search="fetchDrawings"
     ></name-pane>
     <drawing-pane
+      v-if="loggedIn"
       :history="history"
       :searchString="searchString"
       @search="fetchDrawings"
@@ -20,26 +22,6 @@ import axios from 'axios'
 import NamePane from './components/name-pane'
 import DrawingPane from './components/drawing-pane'
 
-let callApi = function (method, url, options) {
-  return new Promise((resolve, reject) => {
-    if (!window.localStorage.token) {
-      return reject({ jwt: 'No token' })
-    }
-
-    axios({
-      method,
-      url,
-      ...options,
-      headers: { 'Authorization': `Bearer ${window.localStorage.token}` }
-    }).then((res) => resolve(res))
-      .catch((err) => {
-        // If it's a jwt error, log out
-        // console.error(err)
-        reject(err)
-      })
-  })
-}
-
 // TODO: Make errors visible to the user
 
 export default {
@@ -49,8 +31,41 @@ export default {
     DrawingPane
   },
   methods: {
+    callApi: function (method, url, options) {
+      return new Promise((resolve, reject) => {
+        if (!window.localStorage.token) {
+          return reject({ jwt: 'No token' })
+        }
+
+        axios({
+          method,
+          url,
+          ...options,
+          headers: { 'Authorization': `Bearer ${window.localStorage.token}` }
+        }).then((res) => resolve(res))
+          .catch((err) => {
+            // If it's a jwt error, log out
+            // TODO: Check if it's a jwt error
+            this.loggedIn = false
+            window.localStorage.removeItem('token')
+            // console.error(err)
+            reject(err)
+          })
+      })
+    },
+
+    login: function (username, password) {
+      axios.post('/token', { username, password })
+        .then((res) => {
+          window.localStorage.token = res.data.jwt
+          this.fetchNames()
+          this.fetchDrawings()
+        })
+        .catch((err) => console.error(err))
+    },
+
     fetchNames: function () {
-      callApi('get', '/names')
+      this.callApi('get', '/names')
         .then((res) => { this.people = res.data })
         .catch((err) => { console.error(err) })
     },
@@ -61,13 +76,13 @@ export default {
      */
     addNames: function (names) {
       names = names.split(/\r?\n/)
-      callApi('post', '/names', { data: names })
+      this.callApi('post', '/names', { data: names })
         .then((res) => this.fetchNames())
         .catch((err) => { console.error(err) })
     },
 
     removeName: function (id) {
-      callApi('delete', `/name?id=${id}`)
+      this.callApi('delete', `/name?id=${id}`)
         .then((res) => this.fetchNames())
         .catch((err) => { console.error(err) })
     },
@@ -103,7 +118,7 @@ export default {
         params.endDate = endDate.unix()
       }
 
-      callApi('get', '/drawings', { params })
+      this.callApi('get', '/drawings', { params })
         .then((res) => { this.history = res.data })
         .catch((err) => { console.error(err) })
     },
@@ -113,7 +128,7 @@ export default {
       newDrawingObject.date = newDrawingObject.date.unix()
 
       // Send the request to draw the names
-      callApi('post', '/drawings', { data: newDrawingObject })
+      this.callApi('post', '/drawings', { data: newDrawingObject })
         // Reload the list of drawings
         // There's a better way to do this to reduce network traffic, but...
         .then((res) => this.fetchDrawings())
@@ -124,15 +139,20 @@ export default {
     return {
       people: [],
       history: [],
-      searchString: null
+      searchString: null,
+      // True if we've got a token
+      loggedIn: !!window.localStorage.token
     }
   },
   beforeMount: function () {
-    // Get the names
-    this.fetchNames()
+    if (window.localStorage.token) {
+      console.log('beforeMount: have token')
+      // Get the names
+      this.fetchNames()
 
-    // And the drawings
-    this.fetchDrawings({ searchString: '' })
+      // And the drawings
+      this.fetchDrawings({ searchString: '' })
+    }
   }
 }
 </script>
