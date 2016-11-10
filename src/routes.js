@@ -1,6 +1,9 @@
 'use strict'
 
 const bodyParser = require('body-parser')
+const expressJWT = require('express-jwt')
+const jwt = require('jsonwebtoken')
+const crypto = require('bcryptjs')
 require('./polyfills')
 
 /**
@@ -12,6 +15,53 @@ module.exports = function (app, bootstrap) {
   // Parse JSON bodies
   app.use(bodyParser.json())
   app.use(bodyParser.urlencoded({ extended: true }))
+
+  // Protect API endpoints
+  app.use(expressJWT({ secret: bootstrap.config.secret }).unless({ path: ['/token']}))
+
+  // Log in
+  app.post('/token', function(req, res) {
+    // The following gets really...indented; there may be a better way
+    console.log("Login Request: ", req.body)
+
+    // Find the user in question
+    bootstrap.db.users.find({ username: req.body.username }, (err, user) => {
+      // DB error
+      if (err) {
+        console.error(err)
+        res.status(500).json({ error: err })
+      } else {
+        // Username not found; return Unauthorized
+        if (user === null) {
+          res.status(401).json({ success: false })
+        } else {
+          // Check password
+          console.log(`  Found ${req.body.username}:`, user)
+          crypto.compare(req.body.password, user[0].password, (err, success) => {
+            // In case something funky happens...
+            if (err) {
+              console.error(err)
+              res.status(500).json({ error: err })
+            } else {
+              if (success) {
+                console.log(`  Signing with secret: (${typeof bootstrap.config.secret})`, bootstrap.config.secret)
+                // Successfully logged in
+                // Make a new json token
+                // First make sure we don't pass back the password
+                delete user.password
+                const newToken = jwt.sign({ user }, bootstrap.config.secret)
+
+                res.json({ success: true, jwt: newToken })
+              } else {
+                // Failed to log in
+                res.status(401).json({ success: false })
+              }
+            }
+          });
+        }
+      }
+    })
+  })
 
   app.get('/names', function(req, res) {
     // Get the names from the db and send them back in JSON

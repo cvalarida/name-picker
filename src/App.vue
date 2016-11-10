@@ -22,10 +22,15 @@ import DrawingPane from './components/drawing-pane'
 
 let callApi = function (method, url, options) {
   return new Promise((resolve, reject) => {
+    if (!window.localStorage.token) {
+      return reject({ jwt: 'No token' })
+    }
+
     axios({
       method,
       url,
-      ...options
+      ...options,
+      headers: { 'Authorization': `Bearer ${window.localStorage.token}` }
     }).then((res) => resolve(res))
       .catch((err) => {
         // If it's a jwt error, log out
