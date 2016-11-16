@@ -7,7 +7,7 @@ var registerRoutes = require('./src/routes')
 var port = 8080
 
 // Open up the static files
-expressApp.use(express.static('dist'))
+expressApp.use(express.static(path.join(__dirname + '/dist')))
 
 // Serve index.html
 expressApp.get('/', function(req, res) {
