@@ -73,6 +73,8 @@ vorpal.command('create user <username>')
 // Remove user
 vorpal.command('remove user <username>')
   .action(function (args, cb) {
+    var v = this
+
     app.db.users.remove({ username: args.username }, (err) => {
       if (err) {
         console.error(err)
